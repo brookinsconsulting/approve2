@@ -8,7 +8,7 @@
     <select name="WorkflowEvent_event_ezapprove_section_{$event.id}[]" size="5" multiple="multiple">
     <option value="-1" {cond( $eventData.selected_section_list|contains( -1 ), 'selected="selected"', '' )}>{'All sections'|i18n( 'ezapprove2' )}</option>
     {foreach $event.workflow_type.sections as $section}
-        <option value="{$section.value}" {cond( $eventData.selected_section_list|contains( $section.value ), 'selected="selected"', '')}>{$section.name|wash}</option>
+        <option value="{$section.id}" {cond( $eventData.selected_section_list|contains( $section.id ), 'selected="selected"', '')}>{$section.name|wash}</option>
     {/foreach}
     </select>
 </div>
