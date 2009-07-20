@@ -147,10 +147,13 @@ class eZApprove2Type extends eZWorkflowEventType
             $user = eZUser::instance( $process->attribute( 'user_id' ) );
         }
 
+        eZDebug::writeNotice($user,"Current user");
+        
         $eventData = eZApprove2Event::fetch( $event->attribute( 'id' ), $event->attribute( 'version' ) );
 
         $userGroups = array_merge( (array)$user->attribute( 'groups' ),
                                    (array)$user->attribute( 'contentobject_id' ) );
+        eZDebug::writeNotice($userGroups,'USer groups');
         $workflowSections = explode( ',', $eventData->attribute( 'selected_sections' ) );
         $workflowGroups = explode( ',', $eventData->attribute( 'selected_usergroups' ) );
         $editors = explode( ',', $eventData->attribute( 'approve_users' ) );
@@ -190,22 +193,24 @@ class eZApprove2Type extends eZWorkflowEventType
             $correctSection = true;
         }
 
-        switch( $eventData->attribute( 'approve_type' ) )
-        {
-            case eZApprove2Event::ApproveTypeUser:
-            {
-                $inExcludeGroups = false;
-                $userIsEditor = false;
-            } break;
+//Enforce groups exclusion list ALWAYS
 
-            default:
-            case eZApprove2Event::ApproveTypePredefined:
-            {
+//       switch( $eventData->attribute( 'approve_type' ) )
+//        {
+//            case eZApprove2Event::ApproveTypeUser:
+//            {
+//                $inExcludeGroups = false;
+//                $userIsEditor = false;
+//            } break;
+//
+//            default:
+//            case eZApprove2Event::ApproveTypePredefined:
+//            {
                 $inExcludeGroups = count( array_intersect( $userGroups, $workflowGroups ) ) != 0;
                 $userIsEditor = ( in_array( $user->id(), $editors ) ||
                                   count( array_intersect( $userGroups, $approveGroups ) ) != 0 );
-            } break;
-        }
+//            } break;
+//        }
 
         if ( !$inExcludeGroups &&
              !$userIsEditor &&
@@ -215,7 +220,7 @@ class eZApprove2Type extends eZWorkflowEventType
             {
                 case eZApprove2Event::ApproveTypeUser:
                 {
-                     eZDebug::writeNotice("ezapprove2type::approveTypeUser");
+                   
                     $contentObjectVersionID = $parameters['version'];
                     $contentObjectID = $parameters['object_id'];
                     $approveStatus = eZXApproveStatus::fetchByContentObjectID( $contentObjectID,
@@ -285,7 +290,16 @@ class eZApprove2Type extends eZWorkflowEventType
                                         $db->query( 'DELETE FROM ezurlalias
                                                      WHERE destination_url=\'content/versionview/' . $approveStatus->attribute( 'contentobject_id' ) . '/' . $approveStatus->attribute( 'active_version' ) . '\'' );
                                     }
-                                    
+                                    $db = eZDB::instance();
+                                    $db->begin();
+                                    $contentObjectID=$collaborationItem->contentAttribute( 'content_object_id' );
+                                    $approveStatus->cancel();
+                                    $contentObjectVersion = eZApproveCollaborationHandler::contentObjectVersion( $collaborationItem );
+                                    $currentVersion=$contentObjectVersion->Attribute('version');
+                                    $objVersion=eZContentObjectVersion::fetchVersion($currentVersion,$contentObjectID);
+                                    $objVersion->setAttribute('status',eZContentObjectVersion::STATUS_DRAFT);
+                                    $objVersion->store();
+                                    $db->commit();
                                     return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
                                 }
 
@@ -338,7 +352,16 @@ class eZApprove2Type extends eZWorkflowEventType
                                     $db->arrayQuery( 'DELETE FROM ezcontentobject_tree where contentobject_id = ' . $approveStatus->attribute( 'contentobject_id' ) .
                                                      ' AND contentobject_version = ' . $approveStatus->attribute( 'active_version' ) );
                                 }
-                                
+                                $db = eZDB::instance();
+                                $db->begin();
+                                $contentObjectID=$collaborationItem->contentAttribute( 'content_object_id' );
+                                $approveStatus->cancel();
+                                $contentObjectVersion = eZApproveCollaborationHandler::contentObjectVersion( $collaborationItem );
+                                $currentVersion=$contentObjectVersion->Attribute('version');
+                                $objVersion=eZContentObjectVersion::fetchVersion($currentVersion,$contentObjectID);
+                                $objVersion->setAttribute('status',eZContentObjectVersion::STATUS_DRAFT);
+                                $objVersion->store();
+                                $db->commit();
                                 return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
                             } break;
 
@@ -353,7 +376,7 @@ class eZApprove2Type extends eZWorkflowEventType
 
                 case eZApprove2Event::ApproveTypePredefined:
                 {
-                    eZDebug::writeNotice("ezapprove2type::ApproveTypePredefined");
+                    
                     $approveStatus = eZXApproveStatus::fetchByWorkflowProcessID( $process->attribute( 'id' ),
                                                                                  $process->attribute( 'event_position' ) );
                     if ( !$approveStatus )
