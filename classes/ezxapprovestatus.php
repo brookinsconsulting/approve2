@@ -140,10 +140,11 @@ class eZXApproveStatus extends eZPersistentObject
     */
     function cancel()
     {
-
+    
         $collaborationItem = $this->attribute( 'collaboration_item' );
         if ( $collaborationItem )
         {
+            
             $collaborationItem->setAttribute( 'data_int3', eZApprove2CollaborationHandler::STATUS_DENIED );
             $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
             $timestamp = time();
@@ -285,7 +286,7 @@ class eZXApproveStatus extends eZPersistentObject
         #include_once( 'kernel/classes/ezworkflowprocess.php' );
         $workflowProcess = eZWorkflowProcess::fetch( $this->attribute( 'workflowprocess_id' ),
                                                      false );
-
+        eZDebug::writeNotice("ezxapprovestatus::approve2event");
         $retVal = false;
         if ( !$workflowProcess )
         {
@@ -591,6 +592,29 @@ class eZXApproveStatus extends eZPersistentObject
                       eZXApproveStatus::StatusDiscarded => ezi18n( 'ezapprove2', 'Discarded' ),
                       eZXApproveStatus::StatusFinnished => ezi18n( 'ezapprove2', 'Finnished' ) );
     }
+//added by MM
+static function niceCleanup()
+    {
+        $db = eZDB::instance();
+        $db->begin();
+        $db->query( "DELETE FROM ezx_approve_status WHERE
+                     approve_status NOT IN ('0','1')");
+        $db->query( "DELETE FROM ezx_approve_status_user_link WHERE
+                    approve_status NOT IN ('3','0')" );
+        $db->commit();
+    }
+//added by MM
+static function cleanup()
+    {
+        $db = eZDB::instance();
+        $db->begin();
+        $db->query( "DELETE FROM ezx_approve_status");
+        $db->query( "DELETE FROM ezx_approve_status_user_link" );
+        $db->commit();
+    }
+
+
+
 
 }
 

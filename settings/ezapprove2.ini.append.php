@@ -4,8 +4,12 @@
 # Append custom user classes here.
 UserClassIdentifierList[]
 UserClassIdentifierList[]=user
+UserClassIdentifierList[]=professore
+UserClassIdentifierList[]=ata
+UserClassIdentifierList[]=genitore
+UserClassIdentifierList[]=alunno
 
-# Append custom user group classes here.
+ * # Append custom user group classes here.
 UserGroupClassIdentifierList[]
 UserGroupClassIdentifierList[]=user_group
 
