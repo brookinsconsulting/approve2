@@ -612,7 +612,12 @@ static function cleanup()
         $db->query( "DELETE FROM ezx_approve_status_user_link" );
         $db->commit();
     }
-
+static function cleanupGroups(){
+        $db = eZDB::instance();
+        $db->begin();
+        $db->query( "DELETE FROM ezcollab_group");
+        $db->commit();
+    }
 
 
 

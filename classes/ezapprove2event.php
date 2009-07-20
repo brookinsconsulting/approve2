@@ -49,8 +49,7 @@
 #define( 'eZApprove2Event_AddApproverNo', 0 );
 #define( 'eZApprove2Event_AddApproverYes', 1 );
 
-class eZApprove2Event extends eZPersistentObject
-{
+class eZApprove2Event extends eZPersistentObject {
     const RequireApproveOne = 0;
     const RequireApproveAll = 1;
     const RequireApproveUser = 2;
@@ -66,93 +65,84 @@ class eZApprove2Event extends eZPersistentObject
     /*!
      Constructor
     */
-    function __construct( $row )
-    {
+    function __construct( $row ) {
         parent::__construct( $row );
     }
 
-    static function definition()
-    {
+    static function definition() {
         return array( 'fields' => array( 'workflowevent_id' => array( 'name' => 'WorkflowEventID',
-                                                                      'datatype' => 'integer',
-                                                                      'default' => 0,
-                                                                      'required' => true ),
-                                         'workflowevent_version' => array( 'name' => 'WorkflowEventVersion',
-                                                                           'datatype' => 'integer',
-                                                                           'default' => 0,
-                                                                           'required' => true ),
-                                         'selected_sections' => array( 'name' => 'SelectedSections',
-                                                                       'datatype' => 'string',
-                                                                       'default' => '-1',
-                                                                       'required' => true ),
-                                         'approve_users' => array( 'name' => 'ApproveUsers',
-                                                                   'datatype' => 'string',
-                                                                   'default' => '',
-                                                                   'required' => true ),
-                                         'approve_groups' => array( 'name' => 'ApproveGroups',
-                                                                    'datatype' => 'string',
-                                                                    'default' => '',
-                                                                    'required' => true ),
-                                         'approve_type' => array( 'name' => 'ApproveType',
-                                                                  'datatype' => 'integer',
-                                                                  'default' => 0,
-                                                                  'required' => true ),
-                                         'selected_usergroups' => array( 'name' => 'SelectedUserGroups',
-                                                                         'datatype' => 'string',
-                                                                         'default' => '',
-                                                                         'required' => true ),
-                                         'num_approve_users' => array( 'name' => 'NumApproveUsers',
-                                                                       'datatype' => 'integer',
-                                                                       'default' => 0,
-                                                                       'required' => true ),
-                                         'allow_add_approver' => array( 'name' => 'AllowAddApprover',
-                                                                        'datatype' => 'integer',
-                                                                        'default' => 0,
-                                                                        'required' => true ),
-                                         'require_all_approve' => array( 'name' => 'RequireAllApprove',
-                                                                         'datatype' => 'integer',
-                                                                         'default' => 0,
-                                                                         'required' => true ) ),
-                      'keys' => array( 'workflowevent_id', 'workflowevent_version' ),
-                      'function_attributes' => array( 'require_approve_name_map' => 'requireApproveNameMap',
-                                                      'add_approver_name_map' => 'addApproverNameMap',
-                                                      'approve_type_name_map' => 'approveTypeNameMap',
-                                                      'approve_user_list' => 'approveUserList',
-                                                      'approve_group_list' => 'approveGroupList',
-                                                      'selected_section_list' => 'selectedSectionList',
-                                                      'selected_usergroup_list' => 'selectedUserGroupList' ),
-                      'sort' => array( 'workflowevent_id' => 'asc' ),
-                      'class_name' => 'eZApprove2Event',
-                      'name' => 'ezx_approve2_event' );
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'workflowevent_version' => array( 'name' => 'WorkflowEventVersion',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'selected_sections' => array( 'name' => 'SelectedSections',
+        'datatype' => 'string',
+        'default' => '-1',
+        'required' => true ),
+        'approve_users' => array( 'name' => 'ApproveUsers',
+        'datatype' => 'string',
+        'default' => '',
+        'required' => true ),
+        'approve_groups' => array( 'name' => 'ApproveGroups',
+        'datatype' => 'string',
+        'default' => '',
+        'required' => true ),
+        'approve_type' => array( 'name' => 'ApproveType',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'selected_usergroups' => array( 'name' => 'SelectedUserGroups',
+        'datatype' => 'string',
+        'default' => '',
+        'required' => true ),
+        'num_approve_users' => array( 'name' => 'NumApproveUsers',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'allow_add_approver' => array( 'name' => 'AllowAddApprover',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'require_all_approve' => array( 'name' => 'RequireAllApprove',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ) ),
+        'keys' => array( 'workflowevent_id', 'workflowevent_version' ),
+        'function_attributes' => array( 'require_approve_name_map' => 'requireApproveNameMap',
+        'add_approver_name_map' => 'addApproverNameMap',
+        'approve_type_name_map' => 'approveTypeNameMap',
+        'approve_user_list' => 'approveUserList',
+        'approve_group_list' => 'approveGroupList',
+        'selected_section_list' => 'selectedSectionList',
+        'selected_usergroup_list' => 'selectedUserGroupList' ),
+        'sort' => array( 'workflowevent_id' => 'asc' ),
+        'class_name' => 'eZApprove2Event',
+        'name' => 'ezx_approve2_event' );
     }
 
-    function approveUserList()
-    {
-        if ( $this->attribute( 'approve_users' ) == '' )
-        {
+    function approveUserList() {
+        if ( $this->attribute( 'approve_users' ) == '' ) {
             $retVal = array();
         }
-        else
-        {
+        else {
             $retVal = explode( ',', $this->attribute( 'approve_users' ) );
         }
         return $retVal;
     }
 
-    function selectedSectionList()
-    {
+    function selectedSectionList() {
         $retVal = explode( ',', $this->attribute( 'selected_sections' ) );
         return $retVal;
     }
 
-    function approveGroupList()
-    {
-        if ( $this->attribute( 'approve_groups' ) == '' )
-        {
+    function approveGroupList() {
+        if ( $this->attribute( 'approve_groups' ) == '' ) {
             $retVal = array();
         }
-        else
-        {
+        else {
             $retVal = explode( ',', $this->attribute( 'approve_groups' ) );
         }
         return $retVal;
@@ -161,38 +151,32 @@ class eZApprove2Event extends eZPersistentObject
     /*!
      Remove user groups from selected liste
     */
-    function removeApproveUserList( $removeIDArray )
-    {
+    function removeApproveUserList( $removeIDArray ) {
         $this->setAttribute( 'approve_users', implode( ',', array_diff( $this->attribute( 'approve_user_list' ),
-                                                                        $removeIDArray ) ) );
+            $removeIDArray ) ) );
     }
 
     /*!
      Remove user groups from selected liste
     */
-    function removeApproveGroupList( $removeIDArray )
-    {
+    function removeApproveGroupList( $removeIDArray ) {
         $this->setAttribute( 'approve_groups', implode( ',', array_diff( $this->attribute( 'approve_group_list' ),
-                                                                         $removeIDArray ) ) );
+            $removeIDArray ) ) );
     }
 
     /*!
      Remove user groups from selected liste
     */
-    function removeSelectedUserList( $removeIDArray )
-    {
+    function removeSelectedUserList( $removeIDArray ) {
         $this->setAttribute( 'selected_usergroups', implode( ',', array_diff( $this->attribute( 'selected_usergroup_list' ),
-                                                                              $removeIDArray ) ) );
+            $removeIDArray ) ) );
     }
 
-    function selectedUserGroupList()
-    {
-        if ( $this->attribute( 'selected_usergroups' ) == '' )
-        {
+    function selectedUserGroupList() {
+        if ( $this->attribute( 'selected_usergroups' ) == '' ) {
             $retVal = array();
         }
-        else
-        {
+        else {
             $retVal = explode( ',', $this->attribute( 'selected_usergroups' ) );
         }
         return $retVal;
@@ -201,31 +185,28 @@ class eZApprove2Event extends eZPersistentObject
     /*!
      Get name/value map for approve users
     */
-    static function requireApproveNameMap()
-    {
+    static function requireApproveNameMap() {
         $retVal = array( eZApprove2Event::RequireApproveOne => ezi18n( 'ezapprove2', 'One' ),
-                         eZApprove2Event::RequireApproveAll => ezi18n( 'ezapprove2', 'All' ),
-                         eZApprove2Event::RequireApproveUser => ezi18n( 'ezapprove2', 'User defined' ) );
+            eZApprove2Event::RequireApproveAll => ezi18n( 'ezapprove2', 'All' ),
+            eZApprove2Event::RequireApproveUser => ezi18n( 'ezapprove2', 'User defined' ) );
         return $retVal;
     }
 
     /*!
      Add approver to workflow.
     */
-    static function addApproverNameMap()
-    {
+    static function addApproverNameMap() {
         $retVal = array( eZApprove2Event::AddApproverNo => ezi18n( 'ezapprove2', 'No' ),
-                         eZApprove2Event::AddApproverYes => ezi18n( 'ezapprove2', 'Yes' ) );
+            eZApprove2Event::AddApproverYes => ezi18n( 'ezapprove2', 'Yes' ) );
         return $retVal;
     }
 
     /*!
      Get approve type name map
     */
-    static function approveTypeNameMap()
-    {
+    static function approveTypeNameMap() {
         $retVal = array( eZApprove2Event::ApproveTypeUser => ezi18n( 'ezapprove2', 'User defined' ),
-                         eZApprove2Event::ApproveTypePredefined => ezi18n( 'ezapprove2', 'Predefined' ) );
+            eZApprove2Event::ApproveTypePredefined => ezi18n( 'ezapprove2', 'Predefined' ) );
         return $retVal;
     }
 
@@ -237,34 +218,29 @@ class eZApprove2Event extends eZPersistentObject
      \param for reload ( default false )
      \param return as object
     */
-    static function fetch( $workflowEventID, $workflowEventVersion = false, $forceLoad = false, $asObject = true )
-    {
-        if ( $workflowEventVersion === false )
-        {
+    static function fetch( $workflowEventID, $workflowEventVersion = false, $forceLoad = false, $asObject = true ) {
+        if ( $workflowEventVersion === false ) {
             $workflowEventVersion = 0;
         }
 
         if ( !$forceLoad &&
-             isset( $GLOBALS['eZApprove2Event_' . $workflowEventID . '_' . $workflowEventVersion] ) )
-        {
+            isset( $GLOBALS['eZApprove2Event_' . $workflowEventID . '_' . $workflowEventVersion] ) ) {
             return $GLOBALS['eZApprove2Event_' . $workflowEventID . '_' . $workflowEventVersion];
         }
 
         $event = eZPersistentObject::fetchObject( eZApprove2Event::definition(),
-                                                  null,
-                                                  array( 'workflowevent_id' => $workflowEventID,
-                                                         'workflowevent_version' => $workflowEventVersion ),
-                                                  $asObject );
+            null,
+            array( 'workflowevent_id' => $workflowEventID,
+            'workflowevent_version' => $workflowEventVersion ),
+            $asObject );
 
-        if ( !$event )
-        {
+        if ( !$event ) {
             $event = eZApprove2Event::fetchDraft( $workflowEventID, $asObject );
         }
 
-        if ( !$event )
-        {
+        if ( !$event ) {
             $event = new eZApprove2Event( array( 'workflowevent_id' => $workflowEventID,
-                                                 'workflowevent_version' => $workflowEventVersion ) );
+                'workflowevent_version' => $workflowEventVersion ) );
         }
 
         $GLOBALS['eZApprove2Event_' . $workflowEventID . '_' . $workflowEventVersion] = $event;
@@ -272,30 +248,39 @@ class eZApprove2Event extends eZPersistentObject
         return $GLOBALS['eZApprove2Event_' . $workflowEventID . '_' . $workflowEventVersion];
     }
 
-    static function fetchDraft( $workflowEventID, $asObject = true )
-    {
+    static function fetchDraft( $workflowEventID, $asObject = true ) {
         $event = eZPersistentObject::fetchObject( eZApprove2Event::definition(),
-                                                  null,
-                                                  array( 'workflowevent_id' => $workflowEventID,
-                                                         'workflowevent_version' => 1 ),
-                                                  $asObject );
+            null,
+            array( 'workflowevent_id' => $workflowEventID,
+            'workflowevent_version' => 1 ),
+            $asObject );
         return $event; #HACK
     }
 
-    function publish()
-    {
+    function publish() {
         $this->setAttribute( 'workflowevent_version', 0 );
         $this->store();
     }
 
-    static function removeDraft()
-    {
+    static function removeDraft() {
         $draft = eZApprove2Event::fetchDraft( $this->attribute( 'workflowevent_id' ) );
-        if ( $draft )
-        {
+        if ( $draft ) {
             $draft->remove();
         }
     }
+
+    static function cleanBeforeCancel($collaborationItem) {
+        $db = eZDB::instance();
+        $db->begin();
+        $contentObjectID=$collaborationItem->contentAttribute( 'content_object_id' );
+        $contentObjectVersion = eZApproveCollaborationHandler::contentObjectVersion( $collaborationItem );
+        $currentVersion=$contentObjectVersion->Attribute('version');
+        $objVersion=eZContentObjectVersion::fetchVersion($currentVersion,$contentObjectID);
+        $objVersion->setAttribute('status',eZContentObjectVersion::STATUS_DRAFT);
+        $objVersion->store();
+        $db->commit();
+    }
+
 }
 
 ?>
