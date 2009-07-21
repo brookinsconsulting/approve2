@@ -137,7 +137,7 @@ class eZApprove2Type extends eZWorkflowEventType {
 
         $userGroups = array_merge( (array)$user->attribute( 'groups' ),
             (array)$user->attribute( 'contentobject_id' ) );
-        eZDebug::writeNotice($userGroups,'USer groups');
+        
         $workflowSections = explode( ',', $eventData->attribute( 'selected_sections' ) );
         $workflowGroups = explode( ',', $eventData->attribute( 'selected_usergroups' ) );
         $editors = explode( ',', $eventData->attribute( 'approve_users' ) );
