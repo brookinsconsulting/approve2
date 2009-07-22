@@ -45,7 +45,7 @@ $script->initialize();
 $db = eZDB::instance();
 $cli->output( "Removing all ezcollaboration2 item" );
 eZXApproveStatus::niceCleanup();
-eZCollaborationItem::cleanup();
+//eZCollaborationItem::cleanup();
 //eZXApproveStatus::cleanupGroups();
 $script->shutdown();
 
