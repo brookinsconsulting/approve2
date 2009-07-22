@@ -43,8 +43,7 @@
 #define( 'eZXApproveStatus_StatusDiscarded', 3 );
 #define( 'eZXApproveStatus_StatusFinnished', 4 );
 
-class eZXApproveStatus extends eZPersistentObject
-{
+class eZXApproveStatus extends eZPersistentObject {
     const StatusSelectApprover = 0;
     const StatusInApproval     = 1;
     const StatusApproved       = 2;
@@ -54,97 +53,93 @@ class eZXApproveStatus extends eZPersistentObject
     /*!
      Constructor
     */
-    function __construct( $row )
-    {
+    function __construct( $row ) {
         parent::__construct( $row );
     }
 
-    static function definition()
-    {
+    static function definition() {
         return array( 'fields' => array( 'id' => array( 'name' => 'ID',
-                                                        'datatype' => 'integer',
-                                                        'default' => 0,
-                                                        'required' => true ),
-                                         'contentobject_id' => array( 'name' => 'ContentObjectID',
-                                                                      'datatype' => 'integer',
-                                                                      'default' => 0,
-                                                                      'required' => true ),
-                                         'approve_status' => array( 'name' => 'ApproveStatus',
-                                                                    'datatype' => 'integer',
-                                                                    'default' => 0,
-                                                                    'required' => true ),
-                                         'contentobject_status' => array( 'name' => 'ContentObjectStatus',
-                                                                          'datatype' => 'integer',
-                                                                          'default' => 0,
-                                                                          'required' => true ),
-                                         'active_version' => array( 'name' => 'ActiveVersion',
-                                                                    'datatype' => 'integer',
-                                                                    'default' => 0,
-                                                                    'required' => true ),
-                                         'locked_version' => array( 'name' => 'LockedVersion',
-                                                                    'datatype' => 'integer',
-                                                                    'default' => 0,
-                                                                    'required' => true ),
-                                         'locked' => array( 'name' => 'LockedTS',
-                                                            'datatype' => 'integer',
-                                                            'default' => 0,
-                                                            'required' => true ),
-                                         'locked_user_id' => array( 'name' => 'LockedUserID',
-                                                                    'datatype' => 'integer',
-                                                                    'default' => 0,
-                                                                    'required' => true ),
-                                         'started' => array( 'name' => 'Started',
-                                                             'datatype' => 'integer',
-                                                             'default' => 0,
-                                                             'required' => true ),
-                                         'ended' => array( 'name' => 'Ended',
-                                                           'datatype' => 'integer',
-                                                           'default' => 0,
-                                                           'required' => true ),
-                                         'collaborationitem_id' => array( 'name' => 'CollaborationID',
-                                                                      'datatype' => 'integer',
-                                                                      'default' => 0,
-                                                                      'required' => true ),
-                                         'workflowprocess_id' => array( 'name' => 'WorkflowProcessID',
-                                                                        'datatype' => 'integer',
-                                                                        'default' => 0,
-                                                                        'required' => true ),
-                                         'required_num_approvers' => array( 'name' => 'RequiredNumApprovers',
-                                                                            'datatype' => 'integer',
-                                                                            'default' => 0,
-                                                                            'required' => true ),
-                                         'event_position' => array( 'name' => 'EventPos',
-                                                               'datatype' => 'integer',
-                                                               'default' => 0,
-                                                               'required' => true ) ),
-                      'keys' => array( 'id' ),
-                      'increment_key' => 'id',
-                      'function_attributes' => array( 'approve_user_list' => 'approveUserList',
-                                                      'object_version' => 'objectVersion',
-                                                      'approve_status_name' => 'approveStatusName',
-                                                      'approve2_event' => 'approve2Event',
-                                                      'contentobject' => 'contentObject',
-                                                      'collaboration_item' => 'collaborationItem',
-                                                      'user_approve_status' => 'userApproveStatus',
-                                                      'num_approved' => 'approvedUserCount',
-                                                      'num_approvers' => 'approversUserCount',
-                                                      'num_approve_required' => 'numApproveRequired',
-                                                      'workflow_process' => 'workflowProcess' ),
-                      'sort' => array( 'id' => 'asc' ),
-                      'class_name' => 'eZXApproveStatus',
-                      'name' => 'ezx_approve_status' );
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'contentobject_id' => array( 'name' => 'ContentObjectID',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'approve_status' => array( 'name' => 'ApproveStatus',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'contentobject_status' => array( 'name' => 'ContentObjectStatus',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'active_version' => array( 'name' => 'ActiveVersion',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'locked_version' => array( 'name' => 'LockedVersion',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'locked' => array( 'name' => 'LockedTS',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'locked_user_id' => array( 'name' => 'LockedUserID',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'started' => array( 'name' => 'Started',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'ended' => array( 'name' => 'Ended',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'collaborationitem_id' => array( 'name' => 'CollaborationID',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'workflowprocess_id' => array( 'name' => 'WorkflowProcessID',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'required_num_approvers' => array( 'name' => 'RequiredNumApprovers',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ),
+        'event_position' => array( 'name' => 'EventPos',
+        'datatype' => 'integer',
+        'default' => 0,
+        'required' => true ) ),
+        'keys' => array( 'id' ),
+        'increment_key' => 'id',
+        'function_attributes' => array( 'approve_user_list' => 'approveUserList',
+        'object_version' => 'objectVersion',
+        'approve_status_name' => 'approveStatusName',
+        'approve2_event' => 'approve2Event',
+        'contentobject' => 'contentObject',
+        'collaboration_item' => 'collaborationItem',
+        'user_approve_status' => 'userApproveStatus',
+        'num_approved' => 'approvedUserCount',
+        'num_approvers' => 'approversUserCount',
+        'num_approve_required' => 'numApproveRequired',
+        'workflow_process' => 'workflowProcess' ),
+        'sort' => array( 'id' => 'asc' ),
+        'class_name' => 'eZXApproveStatus',
+        'name' => 'ezx_approve_status' );
     }
 
     /*!
      Cancel current approve workflow
     */
-    function cancel()
-    {
-    
+    function cancel() {
+
         $collaborationItem = $this->attribute( 'collaboration_item' );
-        if ( $collaborationItem )
-        {
-            
+        if ( $collaborationItem ) {
+
             $collaborationItem->setAttribute( 'data_int3', eZApprove2CollaborationHandler::STATUS_DENIED );
             $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
             $timestamp = time();
@@ -162,12 +157,11 @@ class eZXApproveStatus extends eZPersistentObject
 
      Fetch by collaboration item
     */
-    static function fetchByCollaborationItem( $collaborationItemID, $asObject = true )
-    {
+    static function fetchByCollaborationItem( $collaborationItemID, $asObject = true ) {
         return eZPersistentObject::fetchObject( eZXApproveStatus::definition(),
-                                                null,
-                                                array( 'collaborationitem_id' => $collaborationItemID ),
-                                                $asObject );
+        null,
+        array( 'collaborationitem_id' => $collaborationItemID ),
+        $asObject );
     }
 
     /*!
@@ -175,8 +169,7 @@ class eZXApproveStatus extends eZPersistentObject
 
      Fetch ApproveStatus list bu user ID
     */
-    static function fetchListByUserID( $userID, $offset = 0, $limit = 10, $status = eZXApproveStatus::StatusInApproval )
-    {
+    static function fetchListByUserID( $userID, $offset = 0, $limit = 10, $status = eZXApproveStatus::StatusInApproval ) {
         $db = eZDB::instance();
         $sql = 'SELECT DISTINCT ezx_approve_status.*
                 FROM ezx_approve_status, ezx_approve_status_user_link
@@ -185,11 +178,10 @@ class eZXApproveStatus extends eZPersistentObject
                       ezx_approve_status.approve_status = \'' . $db->escapeString( $status ) . '\'';
 
         $result = $db->arrayQuery( $sql, array( 'limit' => $limit,
-                                                'offset' => $offset ) );
+            'offset' => $offset ) );
 
         if ( !$result ||
-             count( $result ) == 0 )
-        {
+            count( $result ) == 0 ) {
             return false;
         }
 
@@ -203,8 +195,7 @@ class eZXApproveStatus extends eZPersistentObject
 
      \param userID
     */
-    static function fetchCountByUserID( $userID )
-    {
+    static function fetchCountByUserID( $userID ) {
         $db = eZDB::instance();
         $sql = 'SELECT count( DISTINCT ezx_approve_status.id ) as count
                 FROM ezx_approve_status, ezx_approve_status_user_link
@@ -213,8 +204,7 @@ class eZXApproveStatus extends eZPersistentObject
         $result = $db->arrayQuery( $sql );
 
         if ( !$result ||
-             count( $result == 0 ) )
-        {
+            count( $result == 0 ) ) {
             return 0;
         }
 
@@ -224,72 +214,59 @@ class eZXApproveStatus extends eZPersistentObject
     /*!
      \reimp
     */
-    function attribute( $attr, $noFunction = false )
-    {
+    function attribute( $attr, $noFunction = false ) {
         $retVal = false;
-        switch( $attr )
-        {
-            case 'approve_status_name':
-            {
-                $nameMap = $this->statusNameMap();
-                $retVal = $nameMap[$this->attribute( 'approve_status' )];
-            } break;
+        switch( $attr ) {
+            case 'approve_status_name': {
+                    $nameMap = $this->statusNameMap();
+                    $retVal = $nameMap[$this->attribute( 'approve_status' )];
+                } break;
 
-            case 'num_approvers':
-            {
-                $retVal = count( $this->approveUserList() );
-            } break;
+            case 'num_approvers': {
+                    $retVal = count( $this->approveUserList() );
+                } break;
 
-            case 'collaboration_item':
-            {
+            case 'collaboration_item': {
                 #include_once( 'kernel/classes/ezcollaborationitem.php' );
-                $retVal = eZCollaborationItem::fetch( $this->attribute( 'collaborationitem_id' ) );
-            } break;
+                    $retVal = eZCollaborationItem::fetch( $this->attribute( 'collaborationitem_id' ) );
+                } break;
 
-            case 'workflow_process':
-            {
+            case 'workflow_process': {
                 #include_once( 'kernel/classes/ezworkflowprocess.php' );
-                $retVal = eZWorkflowProcess::fetch( $this->attribute( 'workflowprocess_id' ) );
-            } break;
+                    $retVal = eZWorkflowProcess::fetch( $this->attribute( 'workflowprocess_id' ) );
+                } break;
 
-            case 'user_approve_status':
-            {
-                $retVal = eZXApproveStatusUserLink::fetchByUserID( eZUser::currentUserID(),
-                                                                   $this->attribute( 'id' ),
-                                                                   eZXApproveStatusUserLink::RoleApprover );
-            } break;
+            case 'user_approve_status': {
+                    $retVal = eZXApproveStatusUserLink::fetchByUserID( eZUser::currentUserID(),
+                        $this->attribute( 'id' ),
+                        eZXApproveStatusUserLink::RoleApprover );
+                } break;
 
-            case 'num_approve_required':
-            {
-                $eventData = $this->attribute( 'approve2_event' );
-                if ( $eventData )
-                {
-                    $retVal = $eventData->attribute( 'require_all_approve' ) ? $this->attribute( 'num_approvers' ) : 1;
-                }
-            } break;
+            case 'num_approve_required': {
+                    $eventData = $this->attribute( 'approve2_event' );
+                    if ( $eventData ) {
+                        $retVal = $eventData->attribute( 'require_all_approve' ) ? $this->attribute( 'num_approvers' ) : 1;
+                    }
+                } break;
 
-            case 'contentobject':
-            {
-                $retVal = eZContentObject::fetch( $this->attribute( 'contentobject_id' ) );
-            } break;
+            case 'contentobject': {
+                    $retVal = eZContentObject::fetch( $this->attribute( 'contentobject_id' ) );
+                } break;
 
-            default:
-            {
-                $retVal = eZPersistentObject::attribute( $attr );
-            } break;
+            default: {
+                    $retVal = eZPersistentObject::attribute( $attr );
+                } break;
         }
         return $retVal;
     }
 
-    function approve2Event()
-    {
-        #include_once( 'kernel/classes/ezworkflowprocess.php' );
+    function approve2Event() {
+    #include_once( 'kernel/classes/ezworkflowprocess.php' );
         $workflowProcess = eZWorkflowProcess::fetch( $this->attribute( 'workflowprocess_id' ),
-                                                     false );
+            false );
         eZDebug::writeNotice("ezxapprovestatus::approve2event");
         $retVal = false;
-        if ( !$workflowProcess )
-        {
+        if ( !$workflowProcess ) {
             return $retVal;
         }
         #include_once( eZExtension::baseDirectory() . '/ezapprove2/eventtypes/event/ezxapprove2/ezxapprove2type.php' );
@@ -297,23 +274,20 @@ class eZXApproveStatus extends eZPersistentObject
         return $retVal;
     }
 
-    function objectVersion()
-    {
+    function objectVersion() {
         $retVal = eZContentObjectVersion::fetchVersion( $this->attribute( 'active_version' ),
-                                                        $this->attribute( 'contentobject_id' ) );
+            $this->attribute( 'contentobject_id' ) );
         return $retVal;
     }
 
     /*!
      Check if a user is approver
     */
-    function isApprover( $userID )
-    {
+    function isApprover( $userID ) {
         $approveUserLink = eZXApproveStatusUserLink::fetchByUserID( $userID,
-                                                                    $this->attribute( 'id' ),
-                                                                    eZXApproveStatusUserLink::RoleApprover );
-        if ( $approveUserLink )
-        {
+            $this->attribute( 'id' ),
+            eZXApproveStatusUserLink::RoleApprover );
+        if ( $approveUserLink ) {
             return true;
         }
 
@@ -323,13 +297,11 @@ class eZXApproveStatus extends eZPersistentObject
     /*!
      Check if the user ID is creator
     */
-    function isCreator( $userID )
-    {
+    function isCreator( $userID ) {
         $approveUserLink = eZXApproveStatusUserLink::fetchByUserID( $userID,
-                                                                    $this->attribute( 'id' ),
-                                                                    eZXApproveStatusUserLink::RoleCreator );
-        if ( $approveUserLink )
-        {
+            $this->attribute( 'id' ),
+            eZXApproveStatusUserLink::RoleCreator );
+        if ( $approveUserLink ) {
             return true;
         }
 
@@ -341,63 +313,55 @@ class eZXApproveStatus extends eZPersistentObject
 
      \param UserID
     */
-    function setCreator( $userID )
-    {
+    function setCreator( $userID ) {
         $approveUserLink = eZXApproveStatusUserLink::fetchByUserID( $userID,
-                                                                    $this->attribute( 'id' ),
-                                                                    eZXApproveStatusUserLink::RoleCreator );
-        if ( !$approveUserLink )
-        {
+            $this->attribute( 'id' ),
+            eZXApproveStatusUserLink::RoleCreator );
+        if ( !$approveUserLink ) {
             $approveUserLink = eZXApproveStatusUserLink::create( $userID,
-                                                                 $this->attribute( 'id' ),
-                                                                 eZXApproveStatusUserLink::RoleCreator );
+                $this->attribute( 'id' ),
+                eZXApproveStatusUserLink::RoleCreator );
             $approveUserLink->store();
         }
     }
 
-    function addApproveUser( $userID, $hash = false )
-    {
+    function addApproveUser( $userID, $hash = false ) {
         if ( $this->isCreator( $userID ) ||
-             !$userID )
-        {
+            !$userID ) {
             return false;
         }
 
         $hashCond = false;
-        if ( $hash !== false )
-        {
+        if ( $hash !== false ) {
             $hashCond = array( array( $hash, '' ) );
         }
 
         $approveUserLink = eZXApproveStatusUserLink::fetchByUserID( $userID,
-                                                                    $this->attribute( 'id' ),
-                                                                    eZXApproveStatusUserLink::RoleApprover,
-                                                                    $hashCond );
-        if ( !$approveUserLink )
-        {
+            $this->attribute( 'id' ),
+            eZXApproveStatusUserLink::RoleApprover,
+            $hashCond );
+        if ( !$approveUserLink ) {
             $approveUserLink = eZXApproveStatusUserLink::create( $userID,
-                                                                 $this->attribute( 'id' ),
-                                                                 eZXApproveStatusUserLink::RoleApprover,
-                                                                 $hash );
+                $this->attribute( 'id' ),
+                eZXApproveStatusUserLink::RoleApprover,
+                $hash );
             $approveUserLink->store();
         }
     }
 
-    function approveUserList( $hash = false, $asObject = true )
-    {
+    function approveUserList( $hash = false, $asObject = true ) {
         $cond = array( 'approve_id' => $this->attribute( 'id' ),
-                       'approve_role' => eZXApproveStatusUserLink::RoleApprover );
+            'approve_role' => eZXApproveStatusUserLink::RoleApprover );
 
-        if ( $hash !== false )
-        {
+        if ( $hash !== false ) {
             $cond['hash'] = $hash;
         }
         $retVal = eZPersistentObject::fetchObjectList( eZXApproveStatusUserLink::definition(),
-                                                       null,
-                                                       $cond,
-                                                       null,
-                                                       null,
-                                                       $asObject);
+            null,
+            $cond,
+            null,
+            null,
+            $asObject);
         return $retVal;
     }
 
@@ -406,13 +370,10 @@ class eZXApproveStatus extends eZPersistentObject
 
      \return number of users who have approved.
     */
-    function discardedUserCount()
-    {
+    function discardedUserCount() {
         $discardCount = 0;
-        foreach( $this->approveUserList() as $userLink )
-        {
-            if ( $userLink->attribute( 'approve_status' ) == eZXApproveStatusUserLink::StatusDiscarded )
-            {
+        foreach( $this->approveUserList() as $userLink ) {
+            if ( $userLink->attribute( 'approve_status' ) == eZXApproveStatusUserLink::StatusDiscarded ) {
                 ++$discardCount;
             }
         }
@@ -425,13 +386,10 @@ class eZXApproveStatus extends eZPersistentObject
 
      \return number of users who have approved.
     */
-    function approvedUserCount()
-    {
+    function approvedUserCount() {
         $approveCount = 0;
-        foreach( $this->approveUserList() as $userLink )
-        {
-            if ( $userLink->attribute( 'approve_status' ) == eZXApproveStatusUserLink::StatusApproved )
-            {
+        foreach( $this->approveUserList() as $userLink ) {
+            if ( $userLink->attribute( 'approve_status' ) == eZXApproveStatusUserLink::StatusApproved ) {
                 ++$approveCount;
             }
         }
@@ -439,33 +397,29 @@ class eZXApproveStatus extends eZPersistentObject
         return $approveCount;
     }
 
-    static function fetch( $id, $asObject = true )
-    {
+    static function fetch( $id, $asObject = true ) {
         $retVal = eZPersistentObject::fetchObject( eZXApproveStatus::definition(),
-                                                   null,
-                                                   array( 'id' => $id ),
-                                                   $asObject );
+            null,
+            array( 'id' => $id ),
+            $asObject );
         return $retVal;
     }
 
-    function removeUser( $linkID, $hash = false )
-    {
+    function removeUser( $linkID, $hash = false ) {
         $condArray = array( 'id' => $linkID );
-        if ( $hash !== false )
-        {
+        if ( $hash !== false ) {
             $condArray['hash'] = $hash;
         }
         eZPersistentObject::removeObject( eZXApproveStatusUserLink::definition(),
-                                          $condArray );
+            $condArray );
     }
 
-    static function fetchByContentObjectID( $contentObjectID, $contentVersion, $asObject = true )
-    {
+    static function fetchByContentObjectID( $contentObjectID, $contentVersion, $asObject = true ) {
         $retVal = eZPersistentObject::fetchObject( eZXApproveStatus::definition(),
-                                                   null,
-                                                   array( 'contentobject_id' => $contentObjectID,
-                                                          'active_version' => $contentVersion ),
-                                                   $asObject );
+            null,
+            array( 'contentobject_id' => $contentObjectID,
+            'active_version' => $contentVersion ),
+            $asObject );
         return $retVal;
     }
 
@@ -474,26 +428,24 @@ class eZXApproveStatus extends eZPersistentObject
 
      \param processitem ID
     */
-    static function fetchByWorkflowProcessID( $processID, $position, $asObject = true )
-    {
+    static function fetchByWorkflowProcessID( $processID, $position, $asObject = true ) {
         return eZPersistentObject::fetchObject( eZXApproveStatus::definition(),
-                                                null,
-                                                array( 'workflowprocess_id' => $processID,
-                                                       'event_position' => $position ),
-                                                $asObject );
+        null,
+        array( 'workflowprocess_id' => $processID,
+        'event_position' => $position ),
+        $asObject );
     }
 
     static function create( $contentObjectID,
-                            $contentObjectVersion,
-                            $workflowProcessID,
-                            $eventPosition )
-    {
+        $contentObjectVersion,
+        $workflowProcessID,
+        $eventPosition ) {
         $retVal = new eZXApproveStatus( array( 'contentobject_id' => $contentObjectID,
-                                               'active_version' => $contentObjectVersion,
-                                               'workflowprocess_id' => $workflowProcessID,
-                                               'started' => time(),
-                                               'event_position' => $eventPosition,
-                                               'approve_status' => eZXApproveStatus::StatusSelectApprover ) );
+            'active_version' => $contentObjectVersion,
+            'workflowprocess_id' => $workflowProcessID,
+            'started' => time(),
+            'event_position' => $eventPosition,
+            'approve_status' => eZXApproveStatus::StatusSelectApprover ) );
         return $retVal;
     }
 
@@ -505,27 +457,22 @@ class eZXApproveStatus extends eZPersistentObject
 
      \return collaboration item ID.
     */
-    function createCollaboration( $hash = false, $creatorID = false )
-    {
-        #include_once( eZExtension::baseDirectory() . '/ezapprove2/eventtypes/event/ezxapprove2/ezxapprove2type.php' );
+    function createCollaboration( $hash = false, $creatorID = false ) {
+    #include_once( eZExtension::baseDirectory() . '/ezapprove2/eventtypes/event/ezxapprove2/ezxapprove2type.php' );
         $approveUserIDList = array();
         $user = eZUser::currentUser();
         $db = eZDB::instance();
         $db->begin();
 
-        if ( $hash === false )
-        {
+        if ( $hash === false ) {
             $approveUserList = $this->attribute( 'approve_user_list' );
         }
-        else
-        {
+        else {
             $approveUserList = $this->approveUserList( $hash );
         }
 
-        foreach( $approveUserList as $approveUserStatus )
-        {
-            if ( !$approveUserStatus->attribute( 'message_link_created' ) )
-            {
+        foreach( $approveUserList as $approveUserStatus ) {
+            if ( !$approveUserStatus->attribute( 'message_link_created' ) ) {
                 $approveUserIDList[] = $approveUserStatus->attribute( 'user_id' );
                 $approveUserStatus->setAttribute( 'message_link_created', eZXApproveStatusUserLink::MessageCreated );
                 $approveUserStatus->setAttribute( 'hash', '' );
@@ -535,21 +482,19 @@ class eZXApproveStatus extends eZPersistentObject
 
         $collaborationItemID = $this->attribute( 'collaborationitem_id' ) ? $this->attribute( 'collaborationitem_id' ) : false;
 
-        if ( $creatorID === false )
-        {
+        if ( $creatorID === false ) {
             $creatorID = $user->id();
         }
 
         #include_once( eZExtension::baseDirectory() . '/ezapprove2/collaboration/ezapprove2/ezapprove2collaborationhandler.php' );
         $collaborationItem = eZApprove2CollaborationHandler::createApproval( $this->attribute( 'contentobject_id' ),
-                                                                             $this->attribute( 'active_version' ),
-                                                                             $creatorID,
-                                                                             $approveUserIDList,
-                                                                             $collaborationItemID );
+            $this->attribute( 'active_version' ),
+            $creatorID,
+            $approveUserIDList,
+            $collaborationItemID );
 
-        if ( $collaborationItem )
-        {
-            // Set collaboration item it to approve status.
+        if ( $collaborationItem ) {
+        // Set collaboration item it to approve status.
             $this->setAttribute( 'collaborationitem_id', $collaborationItem->attribute( 'id' ) );
             $this->store();
             $collaborationItemID = $collaborationItem->attribute( 'id' );
@@ -567,16 +512,15 @@ class eZXApproveStatus extends eZPersistentObject
     /*
      Create and return collaborationItem.
     */
-    function createApproveCollaboration( $process, $event, $userID, $contentobjectID, $contentobjectVersion, $editors )
-    {
+    function createApproveCollaboration( $process, $event, $userID, $contentobjectID, $contentobjectVersion, $editors ) {
         if ( $editors === null )
             return false;
         $authorID = $userID;
         #include_once( eZExtension::baseDirectory() . '/ezapprove2/collaboration/ezapprove2/ezapprove2collaborationhandler.php' );
         return  eZApprove2CollaborationHandler::createApproval( $contentobjectID,
-                                                                $contentobjectVersion,
-                                                                $authorID,
-                                                                $editors );
+        $contentobjectVersion,
+        $authorID,
+        $editors );
     }
 
     /*!
@@ -584,35 +528,95 @@ class eZXApproveStatus extends eZPersistentObject
 
      Get status name map
     */
-    static function statusNameMap()
-    {
+    static function statusNameMap() {
         return array( eZXApproveStatus::StatusSelectApprover => ezi18n( 'ezapprove2', 'Select approver' ),
-                      eZXApproveStatus::StatusInApproval => ezi18n( 'ezapprove2', 'In approval' ),
-                      eZXApproveStatus::StatusApproved => ezi18n( 'ezapprove2', 'Approved' ),
-                      eZXApproveStatus::StatusDiscarded => ezi18n( 'ezapprove2', 'Discarded' ),
-                      eZXApproveStatus::StatusFinnished => ezi18n( 'ezapprove2', 'Finnished' ) );
+        eZXApproveStatus::StatusInApproval => ezi18n( 'ezapprove2', 'In approval' ),
+        eZXApproveStatus::StatusApproved => ezi18n( 'ezapprove2', 'Approved' ),
+        eZXApproveStatus::StatusDiscarded => ezi18n( 'ezapprove2', 'Discarded' ),
+        eZXApproveStatus::StatusFinnished => ezi18n( 'ezapprove2', 'Finnished' ) );
     }
-//added by MM
-static function niceCleanup()
-    {
+    //added by MM
+    static function niceCleanup() {
         $db = eZDB::instance();
         $db->begin();
-        $db->query( "DELETE FROM ezx_approve_status WHERE
-                     approve_status NOT IN ('0','1')");
-        $db->query( "DELETE FROM ezx_approve_status_user_link WHERE
-                    approve_status NOT IN ('3','0')" );
-        $db->commit();
+        $rows = $db->arrayQuery("SELECT id,contentobject_id,collaborationitem_id,
+                                    workflowprocess_id,approve_status FROM ezx_approve_status");
+
+        foreach( $rows as $row) {
+        //const StatusSelectApprover = 0;
+        //    const StatusInApproval     = 1;
+        //    const StatusApproved       = 2;
+        //    const StatusDiscarded      = 3;
+        //    const StatusFinnished      = 4;
+            switch($row['approve_status']) {
+
+                case  eZXApproveStatus::StatusSelectApprover:
+                    printf("%s\n","StatusSelectApprover: nothing more to be done");
+                    break;
+                case eZXApproveStatus::StatusInApproval:
+                    printf("%s\n","StatusInApproval: nothing more to be done");
+                    break;
+                default:
+                    printf("%s\n","We are going to cleanup your tables");
+
+                    $workflow_id=$row['workflowprocess_id'];
+                    $workflow_rows=$db->arrayQuery("SELECT id FROM ezworkflow_process
+                                                    WHERE id=$workflow_id");
+                    if (count($workflow_rows)>0) {
+                        printf("%s\n","There's still a pending workflow");
+                    }else {
+
+                        $collab_item_id=$row['collaborationitem_id'];
+                        $ezap2_id=$row['id'];
+                        $db->query("DELETE FROM ezx_approve_status WHERE
+                                        id=$ezap2_id");
+                        $db->query("DELETE FROM ezcollab_item WHERE
+                                        id=$collab_item_id");
+                        //printf("%s\n","collab_item");
+                        $db->query("DELETE FROM ezx_approve_status_user_link WHERE
+                                        approve_id=$ezap2_id");
+                        //printf("%s\n","ezxapprove_status_user_link");
+                        $db->query("DELETE FROM ezcollab_item_status WHERE
+                                        collaboration_id=$collab_item_id");
+                        //printf("%s\n","ezcollab_item_status");
+                        $db->query("DELETE FROM ezcollab_item_participant_link WHERE
+                                        collaboration_id=$collab_item_id");
+                        //printf("%s\n","ezcollab_item_partecipant_link");
+                        $db->query("DELETE FROM ezcollab_item_group_link WHERE
+                                        collaboration_id=$collab_item_id");
+                        //printf("%s\n","ezcollab_item_group_link");
+                        $messages=$db->arrayQuery("SELECT collaboration_id,message_id FROM ezcollab_item_message_link WHERE
+                                        collaboration_id=$collab_item_id");
+                        if(count($messages)>0) {
+                            foreach($messages as $message) {
+                                $message_id=$message['message_id'];
+                                $db->query("DELETE FROM ezcollab_simple_message WHERE
+                                            id=$message_id");
+                            }
+                            $db->query("DELETE FROM ezcollab_item_message_link WHERE
+                                        collaboration_id=$collab_item_id");
+                        }else {
+                            $db->query("DELETE FROM ezcollab_item_message_link WHERE
+                                        collaboration_id=$collab_item_id");
+                        }
+                    }
+
+
+                    break;
+            }
+
+        }
+       $db->commit();
     }
-//added by MM
-static function cleanup()
-    {
+    //added by MM
+    static function cleanup() {
         $db = eZDB::instance();
         $db->begin();
         $db->query( "DELETE FROM ezx_approve_status");
         $db->query( "DELETE FROM ezx_approve_status_user_link" );
         $db->commit();
     }
-static function cleanupGroups(){
+    static function cleanupGroups() {
         $db = eZDB::instance();
         $db->begin();
         $db->query( "DELETE FROM ezcollab_group");
