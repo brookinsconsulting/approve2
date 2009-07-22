@@ -304,7 +304,10 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
             $contentObjectVersion = $this->contentObjectVersion( $collaborationItem );
             if ( $this->isCustomAction( 'Accept' ) )
             {
+                $collaborationItem->setAttribute( 'data_int3', eZXApproveStatusUserLink::StatusApproved );
                 $approveStatusUserLink->setAttribute( 'approve_status', eZXApproveStatusUserLink::StatusApproved );
+                $collaborationItem->setIsActive( false );
+
             }
             else if ( $this->isCustomAction( 'Deny' ) )
             {
