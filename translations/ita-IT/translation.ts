@@ -1,4 +1,6 @@
-<!DOCTYPE TS><TS>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE TS>
+<TS version="2.0" language="it" sourcelanguage="en">
 <context>
     <name>design/admin/collaboration/handler/view/full/ezapprove</name>
     <message>
@@ -106,11 +108,11 @@
     </message>
     <message>
         <source>%1 was approved for publishing</source>
-        <translation>%1 è stato approvato e sarà pubblicato</translation>
+        <translation>%1 è stato approvato.</translation>
     </message>
     <message>
         <source>%1 was not approved for publishing</source>
-        <translation>% non è stato approvato</translation>
+        <translation>%1 non è stato approvato</translation>
     </message>
     <message>
         <source>%1 awaits your approval</source>
@@ -245,78 +247,62 @@ change your settings at:</source>
 <context>
     <name>ezapprove2</name>
     <message>
-        
         <source>One</source>
         <translation>Uno</translation>
     </message>
     <message>
-        
         <source>All</source>
         <translation>Tutto</translation>
     </message>
     <message>
-        
-        
         <source>User defined</source>
         <translation>Definito dall&apos;utente</translation>
     </message>
     <message>
-        
         <source>No</source>
         <translation>No</translation>
     </message>
     <message>
-        
         <source>Yes</source>
         <translation>Si</translation>
     </message>
     <message>
-        
         <source>Predefined</source>
         <translation>Predefinito</translation>
     </message>
     <message>
-        
         <source>Select approver</source>
         <translation>Seleziona revisore</translation>
     </message>
     <message>
-        
         <source>In approval</source>
         <translation>In approvazione</translation>
     </message>
     <message>
-        
         <source>Approved</source>
         <translation>Approvato</translation>
     </message>
     <message>
-        
         <source>Discarded</source>
         <translation>Scartato</translation>
     </message>
     <message>
-        
         <source>Finnished</source>
         <translation>Finito</translation>
     </message>
     <message>
-        
         <source>None</source>
         <translation>Nessuno</translation>
     </message>
     <message>
-        
         <source>Approve</source>
         <translation>Approva</translation>
     </message>
     <message>
-        
         <source>Discard</source>
         <translation>Scarta</translation>
     </message>
     <message>
-        
         <source>New Draft</source>
         <translation>Nuova bozza</translation>
     </message>
@@ -461,18 +447,14 @@ change your settings at:</source>
         <translation>Aggiorna stati di approvazione</translation>
     </message>
     <message>
-        
-        
         <source>Edit Subscription</source>
         <translation>Modifica sottoscrizione</translation>
     </message>
     <message>
-        
         <source>You need to select at least %num_users users to approve your content.</source>
         <translation>Devi selezionare almeno %num_users per approvare il contenuto</translation>
     </message>
     <message>
-        
         <source>Approve List</source>
         <translation>Lista di approvazione</translation>
     </message>
@@ -480,7 +462,6 @@ change your settings at:</source>
 <context>
     <name>kernel/classes</name>
     <message>
-        
         <source>Approval2</source>
         <translation>Revisione avanzata</translation>
     </message>
@@ -492,7 +473,6 @@ change your settings at:</source>
 <context>
     <name>kernel/workflow/event</name>
     <message>
-        
         <source>Approve2</source>
         <translation>Revisione avanzata</translation>
     </message>
