@@ -1,14 +1,14 @@
 <!-- Tufts VUE 2.3.1 concept-map (cleanup_workflow.vue) 2009-07-22 -->
 <!-- Tufts VUE: http://vue.tufts.edu/ -->
 <!-- Do Not Remove: VUE mapping @version(1.1) jar:file:/opt/vue/VUE.jar!/tufts/vue/resources/lw_mapping_1_1.xml -->
-<!-- Do Not Remove: Saved date Wed Jul 22 10:46:02 CEST 2009 by mosa on platform Linux 2.6.29-1-686-bigmem in JVM 1.6.0_13-b03 -->
+<!-- Do Not Remove: Saved date Wed Jul 22 12:38:25 CEST 2009 by mosa on platform Linux 2.6.29-1-686-bigmem in JVM 1.6.0_13-b03 -->
 <!-- Do Not Remove: Saving version @(#)VUE: built May 6 2009 at 1148 by vue on Linux 2.4.21-57.EL i386 JVM 1.5.0_06-b05 -->
 <?xml version="1.0" encoding="US-ASCII"?>
 <LW-MAP xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="none" ID="0"
-    label="cleanup_workflow.vue" x="0.0" y="0.0" width="1.4E-45"
-    height="1.4E-45" strokeWidth="0.0" autoSized="false">
-    <resource referenceCreated="1248252362882" size="35161"
+    label="cleanup_workflow.vue" x="0.0" y="0.0" width="1383.5065"
+    height="935.8351" strokeWidth="0.0" autoSized="false">
+    <resource referenceCreated="1248259105393" size="35161"
         spec="/var/www/ez/extension/ezapprove2/doc/cleanup_workflow.vue"
         type="1" xsi:type="URLResource">
         <title>cleanup_workflow.vue</title>
