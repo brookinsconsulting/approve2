@@ -42,6 +42,7 @@
 #define( 'eZXApproveStatus_StatusApproved', 2 );
 #define( 'eZXApproveStatus_StatusDiscarded', 3 );
 #define( 'eZXApproveStatus_StatusFinnished', 4 );
+#define( 'eZXApproveStatus_StatusEditedByApprover', 5 );
 
 class eZXApproveStatus extends eZPersistentObject {
     const StatusSelectApprover = 0;
@@ -49,6 +50,7 @@ class eZXApproveStatus extends eZPersistentObject {
     const StatusApproved       = 2;
     const StatusDiscarded      = 3;
     const StatusFinnished      = 4;
+    const StatusEditedByApprover = 5;
 
     /*!
      Constructor
@@ -132,6 +134,22 @@ class eZXApproveStatus extends eZPersistentObject {
         'name' => 'ezx_approve_status' );
     }
 
+
+    function prepareEdit() {
+
+        $collaborationItem = $this->attribute( 'collaboration_item' );
+        if ( $collaborationItem ) {
+
+            $collaborationItem->setAttribute( 'data_int3',eZXApproveStatusUserLink::StatusEditedByApprover);
+            $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
+            $timestamp = time();
+            $collaborationItem->setAttribute( 'modified', $timestamp );
+            $collaborationItem->setIsActive( false );
+            $collaborationItem->sync();
+        }
+        $this->setAttribute( 'approve_status', eZXApproveStatus::StatusEditedByApprover);
+        $this->sync();
+    }
     /*!
      Cancel current approve workflow
     */
