@@ -82,11 +82,9 @@ class eZApprove2Type extends eZWorkflowEventType {
         eZWorkflowEventType::attributes() );
 
     }
-
     function hasAttribute( $attr ) {
         return in_array( $attr, $this->attributes() );
     }
-
     function attribute( $attr ) {
         switch( $attr ) {
             case 'sections': {
@@ -103,9 +101,7 @@ class eZApprove2Type extends eZWorkflowEventType {
         $eventValue = eZWorkflowEventType::attribute( $attr );
         return $eventValue;
     }
-
     function execute( $process, $event ) {
-        eZDebug::writeNotice("ezapprove2type::execute");
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $process, 'eZApprove2Type::execute' );
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $event, 'eZApprove2Type::execute' );
 
@@ -130,14 +126,12 @@ class eZApprove2Type extends eZWorkflowEventType {
         else {
             $user = eZUser::instance( $process->attribute( 'user_id' ) );
         }
-
-        eZDebug::writeNotice($user,"Current user");
-
+        
         $eventData = eZApprove2Event::fetch( $event->attribute( 'id' ), $event->attribute( 'version' ) );
 
         $userGroups = array_merge( (array)$user->attribute( 'groups' ),
             (array)$user->attribute( 'contentobject_id' ) );
-        
+
         $workflowSections = explode( ',', $eventData->attribute( 'selected_sections' ) );
         $workflowGroups = explode( ',', $eventData->attribute( 'selected_usergroups' ) );
         $editors = explode( ',', $eventData->attribute( 'approve_users' ) );
@@ -190,7 +184,6 @@ class eZApprove2Type extends eZWorkflowEventType {
             count( array_intersect( $userGroups, $approveGroups ) ) != 0 );
         //            } break;
         //        }
-
         if ( !$inExcludeGroups &&
             !$userIsEditor &&
             $correctSection ) {
@@ -313,12 +306,15 @@ class eZApprove2Type extends eZWorkflowEventType {
                                         if (isset($collaborationItem)) {
                                             eZApprove2Event::cleanBeforeCancel($collaborationItem);
                                         }
-
-
-
                                         return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
                                     } break;
 
+                                case ezXApproveStatus::StatusEditedByApprover:
+                                    if (isset($collaborationItem)) {
+                                        eZApprove2Event::cleanBeforeCancel($collaborationItem);
+                                    }
+                                    return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
+                                    break;
                                 case eZXApproveStatus::StatusApproved:
                                 case eZXApproveStatus::StatusFinnished: {
                                     // Nothing special to do.
@@ -328,7 +324,6 @@ class eZApprove2Type extends eZWorkflowEventType {
                     } break;
 
                 case eZApprove2Event::ApproveTypePredefined: {
-
                         $approveStatus = eZXApproveStatus::fetchByWorkflowProcessID( $process->attribute( 'id' ),
                             $process->attribute( 'event_position' ) );
                         if ( !$approveStatus ) {
@@ -375,40 +370,57 @@ class eZApprove2Type extends eZWorkflowEventType {
 
                             $db->commit();
                         }
+                        switch( $approveStatus->attribute( 'approve_status' ) ) {
 
-                        $discardCount = $approveStatus->discardedUserCount();
-                        $collaborationItem = $approveStatus->attribute( 'collaboration_item' );
-                        #include_once( eZExtension::baseDirectory() . '/ezapprove2/collaboration/ezapprove2/ezapprove2collaborationhandler.php' );
+                            case eZXApproveStatus::StatusInApproval:
+                                $discardCount = $approveStatus->discardedUserCount();
+                                $collaborationItem = $approveStatus->attribute( 'collaboration_item' );
+                                #include_once( eZExtension::baseDirectory() . '/ezapprove2/collaboration/ezapprove2/ezapprove2collaborationhandler.php' );
 
-                        if ( $discardCount > 0 ) {
-                            $approveStatus->cancel();
-                            if (isset($collaborationItem)) {
-                                eZApprove2Event::cleanBeforeCancel($collaborationItem);
-                            }
-                            return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
-                        }
+                                if ( $discardCount > 0 ) {
+                                    $approveStatus->cancel();
+                                    if (isset($collaborationItem)) {
+                                        eZApprove2Event::cleanBeforeCancel($collaborationItem);
+                                    }
+                                    return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
+                                }
 
-                        $numApproved = $approveStatus->attribute( 'num_approved' );
-                        if ( $numApproved >= 1 ) {
-                            $handle = fopen("/tmp/debug.log", "a+");
-                            fwrite($handle,"Sono in nubApproved\n");
-                            $collaborationItem->setAttribute( 'data_int3', eZApprove2CollaborationHandler::STATUS_ACCEPTED );
-                            $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
-                            $timestamp = time();
-                            $collaborationItem->setAttribute( 'modified', $timestamp );
-                            $collaborationItem->setIsActive( false );
-                            $collaborationItem->sync();
-
-                            $approveStatus->setAttribute( 'approve_status', eZXApproveStatus::StatusApproved );
-                            $approveStatus->store();
-                            fclose($handle);
-                            return eZWorkflowType::STATUS_ACCEPTED;
-                        }
-                        else {
-                        // Still need more approvers.
-                            return eZWorkflowType::STATUS_DEFERRED_TO_CRON_REPEAT;
-                        }
-                    } break;
+                                $numApproved = $approveStatus->attribute( 'num_approved' );
+                                if ( $numApproved >= 1 ) {
+                                    $collaborationItem->setAttribute( 'data_int3', eZApprove2CollaborationHandler::STATUS_ACCEPTED );
+                                    $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
+                                    $timestamp = time();
+                                    $collaborationItem->setAttribute( 'modified', $timestamp );
+                                    $collaborationItem->setIsActive( false );
+                                    $collaborationItem->sync();
+                                    $approveStatus->setAttribute( 'approve_status', eZXApproveStatus::StatusApproved );
+                                    $approveStatus->store();
+                                    return eZWorkflowType::STATUS_ACCEPTED;
+                                }
+                                else {
+                                // Still need more approvers.
+                                    return eZWorkflowType::STATUS_DEFERRED_TO_CRON_REPEAT;
+                                }
+                                break;//statusInapproval
+                            case eZXApproveStatus::StatusDiscarded:
+                                $approveStatus->cancel();
+                                if (isset($collaborationItem)) {
+                                    eZApprove2Event::cleanBeforeCancel($collaborationItem);
+                                }
+                                return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
+                                break;
+                            case ezXApproveStatus::StatusEditedByApprover:
+                                if (isset($collaborationItem)) {
+                                    eZApprove2Event::cleanBeforeCancel($collaborationItem);
+                                }
+                                return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
+                                break;
+                            case eZXApproveStatus::StatusApproved:
+                            case eZXApproveStatus::StatusFinnished:
+                            // Nothing special to do.
+                                break;
+                    }//end approval state test
+                    } break;//end approvetypepredefined
             }
         }
         else {
@@ -503,8 +515,7 @@ class eZApprove2Type extends eZWorkflowEventType {
      \reimp
     */
     function storeEventData( $event, $version ) {
-        eZDebug::writeNotice("ezapprove2type::storeeventedata");
-        $eventData = eZApprove2Event::fetch( $event->attribute( 'id' ), 1 );
+       $eventData = eZApprove2Event::fetch( $event->attribute( 'id' ), 1 );
 
         switch( $version ) {
             case 0: // publish
@@ -528,8 +539,7 @@ class eZApprove2Type extends eZWorkflowEventType {
      Create and return collaborationItem.
     */
     function createApproveCollaboration( $process, $event, $userID, $contentobjectID, $contentobjectVersion, $editors ) {
-        eZDebug::writeNotice("ezapprove2type::createapprovecollaboration");
-        if ( $editors === null )
+       if ( $editors === null )
             return false;
         $authorID = $userID;
         #include_once( eZExtension::baseDirectory() . '/ezapprove2/collaboration/ezapprove2/ezapprove2collaborationhandler.php' );
@@ -610,7 +620,6 @@ class eZApprove2Type extends eZWorkflowEventType {
      \reimp
     */
     function cleanupAfterRemoving( $attr = array() ) {
-        eZDebug::writeNotice($attr,"cleanupafterREMOVING");
         foreach ( array_keys( $attr ) as $attrKey ) {
             switch ( $attrKey ) {
                 case 'DeleteContentObject': {
@@ -642,14 +651,12 @@ class eZApprove2Type extends eZWorkflowEventType {
     }
 
     function checkApproveCollaboration( $process, $event ) {
-        eZDebug::writeNotice("ezapprove2type::checkapprovecollaboration");
         $db = eZDb::instance();
         $taskResult = $db->arrayQuery( 'select workflow_process_id, collaboration_id from ezapprove_items where workflow_process_id = ' . $process->attribute( 'id' )  );
         $collaborationID = $taskResult[0]['collaboration_id'];
         $collaborationItem = eZCollaborationItem::fetch( $collaborationID );
         $contentObjectVersion = eZApproveCollaborationHandler::contentObjectVersion( $collaborationItem );
         $approvalStatus = eZApproveCollaborationHandler::checkApproval( $collaborationID );
-        eZDebug::writeNotice($approvalStatus,"Approval Status in checkApproveCollaboration");
         if ( $approvalStatus == eZApproveCollaborationHandler::STATUS_WAITING ) {
             eZDebugSetting::writeDebug( 'kernel-workflow-approve', $event, 'approval still waiting' );
             return eZWorkflowType::STATUS_DEFERRED_TO_CRON_REPEAT;
