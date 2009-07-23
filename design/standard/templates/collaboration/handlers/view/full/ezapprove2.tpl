@@ -33,54 +33,56 @@
         {* DESIGN: Content START *}<div class="box-ml"><div class="box-mr"><div class="box-content">
 
                     <div class="context-attributes">
+  
 
+                 
                         {switch match=$collab_item.data_int3}
+                       
                         {case match=0}
 
                         {if $collab_item.is_creator}
-                        <p>{"The content object awaits approval before it can be published."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
-                        <p>{"If you wish you may send a message to the person approving it?"|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</p>
+                                <p>{"The content object awaits approval before it can be published."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
+                                <p>{"If you wish you may send a message to the person approving it?"|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</p>
                         {else}
-                        {switch match=first_set( $approveStatus.user_approve_status.approve_status, 0 )}
-                        {case match=0}
-                        <p>{"The content object %1 needs your approval before it can be published."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
-                        <p>{"Do you approve of the content object being published?"|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</p>
-                        {/case}
-                        {case match=1}
-                        <p>{'You have approved the content, and it is waiting for more approvers, or the workflow to continue the processing of the object,'|i18n( 'design/admin/collaboration/handler/view/full/ezapprove' )}</p>
-                        {/case}
-                        {/switch}
+                            {switch match=first_set( $approveStatus.user_approve_status.approve_status, 0 )}
+                                {case match=0}
+                                    <p>{"The content object %1 needs your approval before it can be published."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
+                                    <p>{"Do you approve of the content object being published?"|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</p>
+                                {/case}
+                                {case match=1}
+                                    <p>{'You have approved the content, and it is waiting for more approvers, or the workflow to continue the processing of the object,'|i18n( 'design/admin/collaboration/handler/view/full/ezapprove' )}</p>
+                                {/case}
+                            {/switch}
                         {/if}
 
                         {/case}
                         {case match=1}
-                        {if and( is_set( $contentobject_link ),$contentobject_link )}
-                        <p>{"The content object %1 was approved and will be published once the publishing workflow continues."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
-                        {else}
-                        <p>{"The content object %1 [deleted] was approved and will be published once the publishing workflow continues."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($collab_item.content.content_object_id))}</p>
-                        {/if}
+                            {if and( is_set( $contentobject_link ),$contentobject_link )}
+                                <p>{"The content object %1 was approved and will be published once the publishing workflow continues."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
+                            {else}
+                                <p>{"The content object %1 [deleted] was approved and will be published once the publishing workflow continues."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($collab_item.content.content_object_id))}</p>
+                            {/if}
                         {/case}
                         {case in=array(2,3)}
-                        {if $collab_item.is_creator}
-                        {if and( is_set( $contentobject_link ),$contentobject_link )}
-                        <p>{"The content object %1 was not accepted but is available as a draft again."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
-                        {else}
-                        <p>{"The content object %1 [deleted] was not accepted but is available as a draft again."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($collab_item.content.content_object_id))}</p>
-                        {/if}
-                        {if $content_version|null()|not()}
-                        <p>{"You may reedit the draft and publish it, in which case an approval is required again."|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</p>
-                        <p><a href={concat("content/edit/",$content_version.contentobject_id)|ezurl}>{"Edit the object"|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</a></p>
-                        {/if}
-                        {else}
-                        {if and( is_set( $contentobject_link ),$contentobject_link )}
-                        <p>{"The content object %1 was not accepted but will be available as a draft for the author."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
-                        {else}
-                        <p>{"The content object %1 [deleted] was not accepted but will be available as a draft for the author."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($collab_item.content.content_object_id))}</p>
-                        {/if}
-                        <p>{"The author can reedit the draft and publish it again, in which a new approval item is made."|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</p>
-                        {/if}
+                             {if $collab_item.is_creator}
+                                    {if and( is_set( $contentobject_link ),$contentobject_link )}
+                                        <p>{"The content object %1 was not accepted but is available as a draft again."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
+                                    {else}
+                                        <p>{"The content object %1 [deleted] was not accepted but is available as a draft again."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($collab_item.content.content_object_id))}</p>
+                                    {/if}
+                                {if $content_version|null()|not()}
+                                        <p>{"You may reedit the draft and publish it, in which case an approval is required again."|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</p>
+                                        <p><a href={concat("content/edit/",$content_version.contentobject_id)|ezurl}>{"Edit the object"|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</a></p>
+                                {/if}
+                             {else}
+                                    {if and( is_set( $contentobject_link ),$contentobject_link )}
+                                        <p>{"The content object %1 was not accepted but will be available as a draft for the author."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($contentobject_link))}</p>
+                                    {else}
+                                        <p>{"The content object %1 [deleted] was not accepted but will be available as a draft for the author."|i18n('design/admin/collaboration/handler/view/full/ezapprove',,array($collab_item.content.content_object_id))}</p>
+                                    {/if}
+                                    <p>{"The author can reedit the draft and publish it again, in which a new approval item is made."|i18n('design/admin/collaboration/handler/view/full/ezapprove')}</p>
+                              {/if}
                         {/case}
-                        {case/}
                         {/switch}
 
                         {if eq($collab_item.data_int3,0)}
