@@ -48,7 +48,7 @@
 #define( 'eZXApproveStatusUserLink_StatusNewDraft', 3 );
 #define( 'eZXApproveStatusUserLink_MessageMissing', 0 );
 #define( 'eZXApproveStatusUserLink_MessageCreated', 1 );
-
+#define( 'eZXApproveStatusUserLink_EditedByApprover', 5 );
 class eZXApproveStatusUserLink extends eZPersistentObject
 {
     const RoleCreator = 0;
@@ -58,9 +58,11 @@ class eZXApproveStatusUserLink extends eZPersistentObject
     const StatusApproved = 1;
     const StatusDiscarded = 2;
     const StatusNewDraft = 3;
+    const StatusEditedByApprover = 5;
 
     const MessageMissing = 0;
     const MessageCreated = 1;
+
 
     /*!
      Constructor
@@ -184,7 +186,8 @@ class eZXApproveStatusUserLink extends eZPersistentObject
         return array( eZXApproveStatusUserLink::StatusNone      => ezi18n( 'ezapprove2', 'None' ),
                       eZXApproveStatusUserLink::StatusApproved  => ezi18n( 'ezapprove2', 'Approve' ),
                       eZXApproveStatusUserLink::StatusDiscarded => ezi18n( 'ezapprove2', 'Discard' ),
-                      eZXApproveStatusUserLink::StatusNewDraft  => ezi18n( 'ezapprove2', 'New Draft' ) );
+                      eZXApproveStatusUserLink::StatusNewDraft  => ezi18n( 'ezapprove2', 'New Draft' ),
+                      eZXApproveStatusUserLink::StatusEditedByApprover  => ezi18n( 'ezapprove2', 'Edited by Approver' ));
     }
 }
 

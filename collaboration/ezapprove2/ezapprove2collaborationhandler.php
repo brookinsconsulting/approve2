@@ -71,9 +71,8 @@
 /// The contentobject was deferred and will be a draft again for reediting.
 #define( "EZ_COLLABORATION_APPROVE2_STATUS_DEFERRED", 3 );
 
-class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
-{
-    /// Approval message type
+class eZApprove2CollaborationHandler extends eZCollaborationItemHandler {
+/// Approval message type
     const MESSAGE_TYPE_APPROVE2 = 1;
 
     /// Default status, no approval decision has been made
@@ -91,53 +90,46 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
     /*!
      Initializes the handler
     */
-    function __construct()
-    {
+    function __construct() {
         $this->eZCollaborationItemHandler( 'ezapprove2',
-                                           ezi18n( 'kernel/classes', 'Approval2' ),
-                                           array( 'use-messages' => true,
-                                                  'notification-types' => true,
-                                                  'notification-collection-handling' => eZCollaborationItemHandler::NOTIFICATION_COLLECTION_PER_PARTICIPATION_ROLE ) );
+            ezi18n( 'kernel/classes', 'Approval2' ),
+            array( 'use-messages' => true,
+            'notification-types' => true,
+            'notification-collection-handling' => eZCollaborationItemHandler::NOTIFICATION_COLLECTION_PER_PARTICIPATION_ROLE ) );
     }
 
     /*!
      \reimp
     */
-    function title( $collaborationItem )
-    {
+    function title( $collaborationItem ) {
         return ezi18n( 'kernel/classes', 'Approval v.2' );
     }
 
     /*!
      \reimp
     */
-    function content( $collaborationItem )
-    {
+    function content( $collaborationItem ) {
         $content = array( "content_object_id" => $collaborationItem->attribute( "data_int1" ),
-                          "content_object_version" => $collaborationItem->attribute( "data_int2" ),
-                          "approval_status" => $collaborationItem->attribute( "data_int3" ) );
+            "content_object_version" => $collaborationItem->attribute( "data_int2" ),
+            "approval_status" => $collaborationItem->attribute( "data_int3" ) );
         return $content;
     }
 
-    function notificationParticipantTemplate( $participantRole )
-    {
-        if ( $participantRole == eZCollaborationItemParticipantLink::ROLE_APPROVER )
-        {
+    function notificationParticipantTemplate( $participantRole ) {
+        if ( $participantRole == eZCollaborationItemParticipantLink::ROLE_APPROVER ) {
             return 'approve.tpl';
         }
-        else if ( $participantRole == eZCollaborationItemParticipantLink::ROLE_AUTHOR )
-        {
-            return 'author.tpl';
-        }
-        else
-            return false;
+        else if ( $participantRole == eZCollaborationItemParticipantLink::ROLE_AUTHOR ) {
+                return 'author.tpl';
+            }
+            else
+                return false;
     }
 
     /*!
      \return the content object version object for the collaboration item \a $collaborationItem
     */
-    function contentObjectVersion( $collaborationItem )
-    {
+    function contentObjectVersion( $collaborationItem ) {
         $contentObjectID = $collaborationItem->contentAttribute( 'content_object_id' );
         $contentObjectVersion = $collaborationItem->contentAttribute( 'content_object_version' );
         return eZContentObjectVersion::fetchVersion( $contentObjectVersion, $contentObjectID );
@@ -147,8 +139,7 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
      \reimp
      Updates the last_read for the participant link.
     */
-    function readItem( $collaborationItem, $viewMode = false )
-    {
+    function readItem( $collaborationItem, $viewMode = false ) {
         $collaborationItem->setLastRead();
     }
 
@@ -156,8 +147,7 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
      \reimp
      \return the number of messages for the approve item.
     */
-    function messageCount( $collaborationItem )
-    {
+    function messageCount( $collaborationItem ) {
         return eZCollaborationItemMessageLink::fetchItemCount( array( 'item_id' => $collaborationItem->attribute( 'id' ) ) );
     }
 
@@ -165,25 +155,22 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
      \reimp
      \return the number of unread messages for the approve item.
     */
-    function unreadMessageCount( $collaborationItem )
-    {
+    function unreadMessageCount( $collaborationItem ) {
         $lastRead = 0;
         $status = $collaborationItem->attribute( 'user_status' );
         if ( $status )
             $lastRead = $status->attribute( 'last_read' );
         return eZCollaborationItemMessageLink::fetchItemCount( array( 'item_id' => $collaborationItem->attribute( 'id' ),
-                                                                      'conditions' => array( 'modified' => array( '>', $lastRead ) ) ) );
+        'conditions' => array( 'modified' => array( '>', $lastRead ) ) ) );
     }
 
     /*!
      \static
      \return the status of the approval collaboration item \a $approvalID.
     */
-    static function checkApproval( $approvalID )
-    {
+    static function checkApproval( $approvalID ) {
         $collaborationItem = eZCollaborationItem::fetch( $approvalID );
-        if ( $collaborationItem !== null )
-        {
+        if ( $collaborationItem !== null ) {
             return $collaborationItem->attribute( 'data_int3' );
         }
         return false;
@@ -193,19 +180,16 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
      \static
      \return makes sure the approval item is activated for all participants \a $approvalID.
     */
-    static function activateApproval( $approvalID )
-    {
+    static function activateApproval( $approvalID ) {
         $collaborationItem = eZCollaborationItem::fetch( $approvalID );
-        if ( $collaborationItem !== null )
-        {
+        if ( $collaborationItem !== null ) {
             $collaborationItem->setAttribute( 'data_int3', eZCollaborationApprove2::STATUS_WAITING );
             $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_ACTIVE );
             $timestamp = time();
             $collaborationItem->setAttribute( 'modified', $timestamp );
             $collaborationItem->store();
             $participantList = eZCollaborationItemParticipantLink::fetchParticipantList( array( 'item_id' => $approvalID ) );
-            foreach( $participantList as $participantLink )
-            {
+            foreach( $participantList as $participantLink ) {
                 $collaborationItem->setIsActive( true, $participantLink->attribute( 'participant_id' ) );
             }
             return true;
@@ -219,14 +203,12 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
      The item will be added to the author \a $authorID and the approver \a $approverID.
      \return the collaboration item.
     */
-    static function createApproval( $contentObjectID, $contentObjectVersion, $authorID, $approverIDList, $collaborationID = false )
-    {
+    static function createApproval( $contentObjectID, $contentObjectVersion, $authorID, $approverIDList, $collaborationID = false ) {
         $createNotification = false;
         $collaborationItem = false;
         $participantList = array();
 
-        if ( $collaborationID === false )
-        {
+        if ( $collaborationID === false ) {
             $collaborationItem = eZCollaborationItem::create( 'ezapprove2', $authorID );
             $collaborationItem->setAttribute( 'data_int1', $contentObjectID );
             $collaborationItem->setAttribute( 'data_int2', $contentObjectVersion );
@@ -236,22 +218,20 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
             $collaborationID = $collaborationItem->attribute( 'id' );
 
             $participantList[] = array( 'id'   => $authorID,
-                                        'role' => eZCollaborationItemParticipantLink::ROLE_AUTHOR );
+                'role' => eZCollaborationItemParticipantLink::ROLE_AUTHOR );
         }
 
-        foreach( $approverIDList as $approverID )
-        {
+        foreach( $approverIDList as $approverID ) {
             $participantList[] = array( 'id'   => $approverID,
-                                        'role' => eZCollaborationItemParticipantLink::ROLE_APPROVER );
+                'role' => eZCollaborationItemParticipantLink::ROLE_APPROVER );
         }
 
         // #HACK# ???
-        foreach ( $participantList as $participantItem )
-        {
+        foreach ( $participantList as $participantItem ) {
             $participantID = $participantItem['id'];
             $participantRole = $participantItem['role'];
             $link = eZCollaborationItemParticipantLink::create( $collaborationID, $participantID,
-                                                                $participantRole, eZCollaborationItemParticipantLink::TYPE_USER );
+                $participantRole, eZCollaborationItemParticipantLink::TYPE_USER );
             $link->store();
 
             $profile = eZCollaborationProfile::instance( $participantID );
@@ -260,8 +240,7 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
         }
 
         // Create the notification
-        if ( $createNotification )
-        {
+        if ( $createNotification ) {
             $collaborationItem->createNotificationEvent();
         }
         return $collaborationItem;
@@ -271,136 +250,127 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
      \reimp
      Adds a new comment, approves the item or denies the item.
     */
-    function handleCustomAction( $module, $collaborationItem )
-    {
+    function handleCustomAction( $module, $collaborationItem ) {
         $redirectView = 'item';
         $redirectParameters = array( 'full', $collaborationItem->attribute( 'id' ) );
         $addComment = false;
 
-        if ( $this->isCustomAction( 'Comment' ) )
-        {
+
+        if ( $this->isCustomAction( 'Comment' ) ) {
             $addComment = true;
         }
         else if ( $this->isCustomAction( 'Accept' ) ||
-                  $this->isCustomAction( 'Deny' ) )
-        {
+                $this->isCustomAction( 'Deny' ) ) {
             #include_once( eZExtension::baseDirectory() . '/ezapprove2/classes/ezxapprovestatus.php' );
 
-            $approveStatus = eZXApproveStatus::fetchByCollaborationItem( $collaborationItem->attribute( 'id' ) );
-            if ( !$approveStatus )
-            {
-                eZDebug::writeError( 'Could not fetch approve status for collaboration id : ' . $collaborationItem->attribute( 'id' ) );
-                return false;
+                $approveStatus = eZXApproveStatus::fetchByCollaborationItem( $collaborationItem->attribute( 'id' ) );
+                if ( !$approveStatus ) {
+                    eZDebug::writeError( 'Could not fetch approve status for collaboration id : ' . $collaborationItem->attribute( 'id' ) );
+                    return false;
+                }
+                $approveStatusUserLink = eZXApproveStatusUserLink::fetchByUserID( eZUser::currentUserID(),
+                    $approveStatus->attribute( 'id' ),
+                    eZXApproveStatusUserLink::RoleApprover );
+                if ( !$approveStatusUserLink ) {
+                    eZDebug::writeDebug( 'User is not approver for approve status : ' . $approveStatus->attribute( 'id' ) . ', user ID : ' . eZUser::currentUserID() );
+                    return false;
+                }
+
+                $contentObjectVersion = $this->contentObjectVersion( $collaborationItem );
+                if ( $this->isCustomAction( 'Accept' ) ) {
+//if you are the last approver the collaboration is approved
+                    $numRequired = $approveStatus->attribute( 'num_approve_required' );
+                    $numApproved = $approveStatus->attribute( 'num_approved' );
+                    if($numApproved>=$numRequired-1){
+                    $collaborationItem->setAttribute( 'data_int3', eZXApproveStatusUserLink::StatusApproved );
+                    }
+                    $approveStatusUserLink->setAttribute( 'approve_status', eZXApproveStatusUserLink::StatusApproved );
+                    $collaborationItem->setIsActive( false );
+
+                }
+                else if ( $this->isCustomAction( 'Deny' ) ) {
+                        $collaborationItem->setIsActive( false );
+                        $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
+                        $approveStatusUserLink->setAttribute( 'approve_status', eZXApproveStatusUserLink::StatusDiscarded );
+                    }
+                $approveStatusUserLink->sync();
+
+                $redirectView = 'view';
+                $redirectParameters = array( 'summary' );
+                $addComment = true;
             }
-            $approveStatusUserLink = eZXApproveStatusUserLink::fetchByUserID( eZUser::currentUserID(),
-                                                                              $approveStatus->attribute( 'id' ),
-                                                                              eZXApproveStatusUserLink::RoleApprover );
-            if ( !$approveStatusUserLink )
-            {
-                eZDebug::writeDebug( 'User is not approver for approve status : ' . $approveStatus->attribute( 'id' ) . ', user ID : ' . eZUser::currentUserID() );
-                return false;
-            }
+            else if ( $this->isCustomAction( 'Edit' ) ) {
+                    $approveStatus = eZXApproveStatus::fetchByCollaborationItem( $collaborationItem->attribute( 'id' ) );
+                    $approveStatusUserLink = eZXApproveStatusUserLink::fetchByUserID( eZUser::currentUserID(),
+                        $approveStatus->attribute( 'id' ),
+                        eZXApproveStatusUserLink::RoleApprover );
+                    $contentObject = $approveStatus->attribute( 'contentobject' );
+                    // Check if user can edit object
+                    if ( !$contentObject ||
+                        !$contentObject->attribute( 'can_edit' ) ) {
+                        eZDebug::writeError( 'insufficient access to edit object : ' . $contentObject->attribute( 'id' ) );
+                        return false;
+                    }
+                    // workflow, and abort all previous pending elements.
+                    $db = eZDB::instance();
+                    if ( !$approveStatus ) {
+                        eZDebug::writeError( 'Could not fetch approve status for collaboration id : ' . $collaborationItem->attribute( 'id' ) );
+                        return false;
+                    }
+                    $db->begin();
+                    $approveStatus->prepareEdit();
+                    // 2. Create new version based in the pending one.
+                    $newVersion = $contentObject->createNewVersion( $approveStatus->attribute( 'active_version' ) );
+                    // If the Object has never been published we have to copy the node
+                    // assignment(s) across from the initial version to avoid the user
+                    // being prompted for a location when publishing.
+                    //
+                    // It would appear that isn't done in the model for non published items.
+                    if ($contentObject->attribute('published') == 0) {
+                        $version = $contentObject->attribute('current');
+                        $nodeAssignmentList = $version->attribute( 'node_assignments' );
+                        $contentObjectID = $contentObject->attribute('id');
+                        $newVersionNumber = $newVersion->attribute('version');
+                        foreach ( array_keys( $nodeAssignmentList ) as $key ) {
+                            $nodeAssignment = $nodeAssignmentList[$key];
+                            $clonedAssignment = $nodeAssignment->cloneNodeAssignment( $newVersionNumber, $contentObjectID );
+                            $clonedAssignment->store();
+                        }
+                    }
 
-            $contentObjectVersion = $this->contentObjectVersion( $collaborationItem );
-            if ( $this->isCustomAction( 'Accept' ) )
-            {
-                $collaborationItem->setAttribute( 'data_int3', eZXApproveStatusUserLink::StatusApproved );
-                $approveStatusUserLink->setAttribute( 'approve_status', eZXApproveStatusUserLink::StatusApproved );
-                $collaborationItem->setIsActive( false );
+                    // 3. Set pending version to rejected.
+                    $oldVersion = $approveStatus->attribute( 'object_version' );
+                    $oldVersion->setAttribute( 'status', eZContentObjectVersion::STATUS_DRAFT);
+                    $oldVersion->sync();
 
-            }
-            else if ( $this->isCustomAction( 'Deny' ) )
-            {
-                $collaborationItem->setIsActive( false );
-                $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
-                $approveStatusUserLink->setAttribute( 'approve_status', eZXApproveStatusUserLink::StatusDiscarded );
-            }
-            $approveStatusUserLink->sync();
+                    // Abort collaboration item. Added by KK
+                    $collaborationItem->setIsActive( false );
+                    $approveStatusUserLink->setAttribute( 'approve_status', eZXApproveStatusUserLink::StatusEditedByApprover);
+                    $approveStatusUserLink->store();
+                    $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
+                    $db->commit();
+                    // 4. Redirect user to new object.
+                    //set some variables in the module view:
 
-            $redirectView = 'view';
-            $redirectParameters = array( 'summary' );
-            $addComment = true;
-        }
-        else if ( $this->isCustomAction( 'Edit' ) )
-        {
-            #include_once( eZExtension::baseDirectory() . '/ezapprove2/classes/ezxapprovestatus.php' );
+                   $module->setActionParameter("collaboration2","edit");
+                   $http = eZHTTPTool::instance();
+                   $http->setSessionVariable('LastPostVars',array('collaboration'=>'edit'));
+                   return $module->redirect('content','edit',array( $contentObject->attribute( 'id' ),
+                   $newVersion->attribute('version') ),null,array('collaboration'=>'edit'));
+                }
+                else if ( $this->isCustomAction( 'AddApprover' ) ) {
+                        $approveStatus = eZXApproveStatus::fetchByCollaborationItem( $collaborationItem->attribute( 'id' ) );
+                        if ( !$approveStatus ) {
+                            eZDebug::writeError( 'Could not find eZXApproveStatus, ' . $collaborationItem->attribute( 'id' ) );
+                            return $Module->handleError( eZError::KERNEL_NOT_AVAILABLE, 'kernel' );
+                        }
 
-            $approveStatus = eZXApproveStatus::fetchByCollaborationItem( $collaborationItem->attribute( 'id' ) );
-            $contentObject = $approveStatus->attribute( 'contentobject' );
+                        return $module->redirect( 'ezapprove2', 'add_approver', array( $approveStatus->attribute( 'id' ) ) );
+                    }
 
-            // Check if user can edit object
-            if ( !$contentObject ||
-                 !$contentObject->attribute( 'can_edit' ) )
-            {
-                eZDebug::writeError( 'insufficient access to edit object : ' . $contentObject->attribute( 'id' ) );
-                return false;
-            }
-
-            // 1. Lock workflow, and abort all previous pending elements.
-            $db = eZDB::instance();
-            if ( !$approveStatus )
-            {
-                eZDebug::writeError( 'Could not fetch approve status for collaboration id : ' . $collaborationItem->attribute( 'id' ) );
-                return false;
-            }
-            $db->begin();
-            $approveStatus->cancel();
-
-            // 2. Create new version based in the pending one.
-            $newVersion = $contentObject->createNewVersion( $approveStatus->attribute( 'active_version' ) );
-            // If the Object has never been published we have to copy the node
-            // assignment(s) acorss from the initial version to avoid the user
-            // being prompted for a location when publishing.
-            //
-            // It would appear that isn't done in the model for non published items.
-            if ($contentObject->attribute('published') == 0)
-            {
-              $version = $contentObject->attribute('current');
-              $nodeAssignmentList = $version->attribute( 'node_assignments' );
-              $contentObjectID = $contentObject->attribute('id');
-              $newVersionNumber = $newVersion->attribute('version');
-              foreach ( array_keys( $nodeAssignmentList ) as $key )
-              {
-                  $nodeAssignment = $nodeAssignmentList[$key];
-                  $clonedAssignment = $nodeAssignment->cloneNodeAssignment( $newVersionNumber, $contentObjectID );
-                  $clonedAssignment->store();
-              }
-            }
-
-            // 3. Set pending version to rejected.
-            $oldVersion = $approveStatus->attribute( 'object_version' );
-            $oldVersion->setAttribute( 'status', eZContentObjectVersion::STATUS_REJECTED );
-            $oldVersion->sync();
-
-            // Abort collaboration item. Added by KK
-            $collaborationItem->setIsActive( false );
-            $collaborationItem->setAttribute( 'status', eZCollaborationItem::STATUS_INACTIVE );
-
-            $db->commit();
-
-            // 4. Redirect user to new object.
-            return $module->redirect( 'content', 'edit', array( $contentObject->attribute( 'id' ),
-                                                                $newVersion->attribute( 'version' ) ) );
-        }
-        else if ( $this->isCustomAction( 'AddApprover' ) )
-        {
-            #include_once( eZExtension::baseDirectory() . '/ezapprove2/classes/ezxapprovestatus.php' );
-
-            $approveStatus = eZXApproveStatus::fetchByCollaborationItem( $collaborationItem->attribute( 'id' ) );
-            if ( !$approveStatus )
-            {
-                eZDebug::writeError( 'Could not find eZXApproveStatus, ' . $collaborationItem->attribute( 'id' ) );
-                return $Module->handleError( eZError::KERNEL_NOT_AVAILABLE, 'kernel' );
-            }
-
-            return $module->redirect( 'ezapprove2', 'add_approver', array( $approveStatus->attribute( 'id' ) ) );
-        }
-
-        if ( $addComment )
-        {
+        if ( $addComment ) {
             $messageText = $this->customInput( 'ApproveComment' );
-            if ( trim( $messageText ) != '' )
-            {
+            if ( trim( $messageText ) != '' ) {
                 $message = eZCollaborationSimpleMessage::create( 'ezapprove2_comment', $messageText );
                 $message->store();
                 eZCollaborationItemMessageLink::addMessage( $collaborationItem, $message, eZApprove2CollaborationHandler::MESSAGE_TYPE_APPROVE2 );
@@ -409,6 +379,7 @@ class eZApprove2CollaborationHandler extends eZCollaborationItemHandler
 
         $collaborationItem->setAttribute( 'modified', time() );
         $collaborationItem->sync();
+        
         return $module->redirectToView( $redirectView, $redirectParameters );
     }
 }
