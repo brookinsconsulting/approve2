@@ -14,7 +14,7 @@ UserGroupClassIdentifierList[]
 UserGroupClassIdentifierList[]=user_group
 
 # Set if object locking, and node creation should on draft creation
-# should be enabled. ( It's recommended not to touch this setting )
+# should be enabled. ( DEPRECATED OPTIONS WILL BE REMOVED SOON )
 ObjectLockOnEdit=false
 NodeCreationOnDraft=false
 
