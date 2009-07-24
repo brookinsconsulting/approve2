@@ -104,17 +104,21 @@ class eZApprove2Type extends eZWorkflowEventType {
     function execute( $process, $event ) {
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $process, 'eZApprove2Type::execute' );
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $event, 'eZApprove2Type::execute' );
-
         $parameters = $process->attribute( 'parameter_list' );
         $versionID = $parameters['version'];
         $object = eZContentObject::fetch( $parameters['object_id'] );
-
         if ( !$object ) {
             eZDebugSetting::writeError( 'kernel-workflow-approve', $parameters['object_id'], 'eZApprove2Type::execute' );
             return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
         }
-
+        eZDebug::writeNotice($_SERVER['SCRIPT_FILENAME']);
+        
         /*
+         * 
+         *
+         *
+         *
+         *
           If we run event first time ( when we click publish in admin ) we do not have user_id set in workflow process,
           so we take current user and store it in workflow process, so next time when we run event from cronjob we fetch
           user_id from there.
@@ -126,6 +130,7 @@ class eZApprove2Type extends eZWorkflowEventType {
         else {
             $user = eZUser::instance( $process->attribute( 'user_id' ) );
         }
+
         
         $eventData = eZApprove2Event::fetch( $event->attribute( 'id' ), $event->attribute( 'version' ) );
 
@@ -136,14 +141,12 @@ class eZApprove2Type extends eZWorkflowEventType {
         $workflowGroups = explode( ',', $eventData->attribute( 'selected_usergroups' ) );
         $editors = explode( ',', $eventData->attribute( 'approve_users' ) );
         $approveGroups = explode( ',', $eventData->attribute( 'approve_groups' ) );
-
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $user, 'eZApprove2Type::execute::user' );
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $userGroups, 'eZApprove2Type::execute::userGroups' );
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $editors, 'eZApprove2Type::execute::editor' );
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $workflowSections, 'eZApprove2Type::execute::workflowSections' );
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $workflowGroups, 'eZApprove2Type::execute::workflowGroups' );
         eZDebugSetting::writeDebug( 'kernel-workflow-approve', $object->attribute( 'section_id'), 'eZApprove2Type::execute::section_id' );
-
         $section = $object->attribute( 'section_id');
         $correctSection = false;
 
@@ -189,26 +192,29 @@ class eZApprove2Type extends eZWorkflowEventType {
             $correctSection ) {
             switch( $eventData->attribute( 'approve_type' ) ) {
                 case eZApprove2Event::ApproveTypeUser: {
-
                         $contentObjectVersionID = $parameters['version'];
                         $contentObjectID = $parameters['object_id'];
                         $approveStatus = eZXApproveStatus::fetchByContentObjectID( $contentObjectID,
                             $contentObjectVersionID );
-
                         if ( !$approveStatus ||
                             $approveStatus->attribute( 'approve_status' ) == eZXApproveStatus::StatusSelectApprover ) {
+
+                            if( preg_match('/webdav/',$_SERVER['SCRIPT_FILENAME'])){
+                                $approveINI = eZINI::instance( 'ezapprove2.ini' );
+                                $webdavEditors=$approveINI->variable( 'ApproveSettings', 'webdavEditors' );
+                                $webdavGroups=array();
+                                $approveStatus=$this->addApprovers($process,$parameters,$webdavGroups,$webdavEditors,$user);
+                            }else{
                             if ( !$approveStatus ) {
                                 $approveStatus = eZXApproveStatus::create( $contentObjectID,
-                                    $contentObjectVersionID,
-                                    $process->attribute( 'id' ),
-                                    $process->attribute( 'event_position' ) );
+                                $contentObjectVersionID,
+                                $process->attribute( 'id' ),
+                                $process->attribute( 'event_position' ) );
                                 $approveStatus->store();
                                 $approveStatus->setCreator( $user->attribute( 'contentobject_id' ) );
                             }
-
                             $approveStatus->setAttribute( 'active_version', $contentObjectVersionID );
                             $approveStatus->sync();
-
                             $process->Template = array();
                             $process->Template['templateName'] = 'design:workflow/eventtype/ezapprove2/select_approver.tpl';
                             $process->Template['templateVars'] = array( 'event' => $event,
@@ -220,8 +226,8 @@ class eZApprove2Type extends eZWorkflowEventType {
                             $contentObjectVersion = eZContentObjectVersion::fetchVersion( $contentObjectVersionID, $contentObjectID );
                             $contentObjectVersion->setAttribute( 'status', eZContentObjectVersion::STATUS_DRAFT );
                             $contentObjectVersion->sync();
-
                             return eZWorkflowType::STATUS_FETCH_TEMPLATE_REPEAT;
+                            }
                         }
                         else {
                             switch( $approveStatus->attribute( 'approve_status' ) ) {
@@ -229,16 +235,13 @@ class eZApprove2Type extends eZWorkflowEventType {
                                     // Do nothing, continue processing in next cronjob run.
                                         return eZWorkflowType::STATUS_DEFERRED_TO_CRON_REPEAT;
                                     } break;
-
                                 case eZXApproveStatus::StatusInApproval: {
                                     // Check if enough users have approved the workflow, or any has discarded it.
                                         $discardCount = $approveStatus->discardedUserCount();
                                         $collaborationItem = $approveStatus->attribute( 'collaboration_item' );
                                         #include_once( eZExtension::baseDirectory() . '/ezapprove2/collaboration/ezapprove2/ezapprove2collaborationhandler.php' );
-
                                         if ( $discardCount > 0 ) {
                                             $approveStatus->cancel();
-
                                             $approveINI = eZINI::instance( 'ezapprove2.ini' );
                                             if ( $approveINI->variable( 'ApproveSettings', 'NodeCreationOnDraft' ) == 'true' ) {
                                                 $db = eZDB::instance();
@@ -257,7 +260,6 @@ class eZApprove2Type extends eZWorkflowEventType {
                                             }
                                             return eZWorkflowType::STATUS_WORKFLOW_CANCELLED;
                                         }
-
                                         $numRequired = $approveStatus->attribute( 'num_approve_required' );
                                         $numApproved = $approveStatus->attribute( 'num_approved' );
                                         if ( $numApproved >= $numRequired ) {
@@ -267,10 +269,8 @@ class eZApprove2Type extends eZWorkflowEventType {
                                             $collaborationItem->setAttribute( 'modified', $timestamp );
                                             $collaborationItem->setIsActive( false );
                                             $collaborationItem->sync();
-
                                             $approveStatus->setAttribute( 'approve_status', eZXApproveStatus::StatusApproved );
                                             $approveStatus->store();
-
                                             $approveINI = eZINI::instance( 'ezapprove2.ini' );
                                             if ( $approveINI->variable( 'ApproveSettings', 'ObjectLockOnEdit' ) == 'true' ) {
                                             // Unlock related objects
@@ -327,48 +327,8 @@ class eZApprove2Type extends eZWorkflowEventType {
                         $approveStatus = eZXApproveStatus::fetchByWorkflowProcessID( $process->attribute( 'id' ),
                             $process->attribute( 'event_position' ) );
                         if ( !$approveStatus ) {
-                            $contentObjectVersionID = $parameters['version'];
-                            $contentObjectID = $parameters['object_id'];
-
-                            $db = eZDB::instance();
-                            $db->begin();
-
-                            // CREATE APPROVE STATUS
-                            $approveStatus = eZXApproveStatus::create( $contentObjectID,
-                                $contentObjectVersionID,
-                                $process->attribute( 'id' ),
-                                $process->attribute( 'event_position' ) );
-                            $approveStatus->store();
-
-                            $approveStatus->setCreator( $user->attribute( 'contentobject_id' ) );
-
-                            // ADD APPROVERS
-                            foreach( $approveGroups as $userGroupID ) {
-                                $userGroupObject = eZContentObject::fetch( $userGroupID );
-                                if ( $userGroupObject ) {
-                                    $userGroupNode = $userGroupObject->attribute( 'main_node' );
-
-                                    if ( $userGroupNode ) {
-                                        foreach( $userGroupNode->subTree( array( 'Depth' => 1,
-                                        'DepthOperator' => 'eq',
-                                        'Limitation' => array() ) ) as $userNode ) {
-                                            $approveStatus->addApproveUser( $userNode->attribute( 'contentobject_id' ) );
-                                        }
-                                    }
-                                }
-                            }
-                            foreach( $editors as $userID ) {
-                                $approveStatus->addApproveUser( $userID );
-                            }
-
-                            $approveStatus->setAttribute( 'approve_status', eZXApproveStatus::StatusInApproval );
-                            $approveStatus->store();
-
-                            $approveStatus->createCollaboration( false, $user->attribute( 'contentobject_id' ) );
-
-                            $approveStatus->store();
-
-                            $db->commit();
+                              $approveStatus=$this->addApprovers($process,$parameters,$approveGroups,$editors,$user);
+//                         
                         }
                         switch( $approveStatus->attribute( 'approve_status' ) ) {
 
@@ -648,6 +608,45 @@ class eZApprove2Type extends eZWorkflowEventType {
                     } break;
             }
         }
+    }
+
+
+    function addApprovers($process,$parameters,$approveGroups,$editors,$user){
+                            $contentObjectVersionID = $parameters['version'];
+                            $contentObjectID = $parameters['object_id'];
+                            $db = eZDB::instance();
+                            $db->begin();
+                            // CREATE APPROVE STATUS
+                            $approveStatus = eZXApproveStatus::create( $contentObjectID,
+                            $contentObjectVersionID,
+                            $process->attribute( 'id' ),
+                            $process->attribute( 'event_position' ) );
+                            $approveStatus->store();
+                            $approveStatus->setCreator( $user->attribute( 'contentobject_id' ) );
+                            // ADD APPROVERS
+                            foreach( $approveGroups as $userGroupID ) {
+                                $userGroupObject = eZContentObject::fetch( $userGroupID );
+                                if ( $userGroupObject ) {
+                                    $userGroupNode = $userGroupObject->attribute( 'main_node' );
+
+                                    if ( $userGroupNode ) {
+                                        foreach( $userGroupNode->subTree( array( 'Depth' => 1,
+                                        'DepthOperator' => 'eq',
+                                        'Limitation' => array() ) ) as $userNode ) {
+                                            $approveStatus->addApproveUser( $userNode->attribute( 'contentobject_id' ) );
+                                        }
+                                    }
+                                }
+                            }
+                            foreach( $editors as $userID ) {
+                                $approveStatus->addApproveUser( $userID );
+                            }
+                            $approveStatus->setAttribute( 'approve_status', eZXApproveStatus::StatusInApproval );
+                            $approveStatus->store();
+                            $approveStatus->createCollaboration( false, $user->attribute( 'contentobject_id' ) );
+                            $approveStatus->store();
+                            $db->commit();
+                            return $approveStatus;
     }
 
     function checkApproveCollaboration( $process, $event ) {

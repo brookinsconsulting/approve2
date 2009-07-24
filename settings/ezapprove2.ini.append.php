@@ -9,7 +9,11 @@ UserClassIdentifierList[]=ata
 UserClassIdentifierList[]=genitore
 UserClassIdentifierList[]=alunno
 
- * # Append custom user group classes here.
+webdavEditors[]
+webdavEditors[]=14
+
+
+# Append custom user group classes here.
 UserGroupClassIdentifierList[]
 UserGroupClassIdentifierList[]=user_group
 
