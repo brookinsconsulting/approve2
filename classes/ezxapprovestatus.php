@@ -567,16 +567,40 @@ class eZXApproveStatus extends eZPersistentObject {
         //    const StatusDiscarded      = 3;
         //    const StatusFinnished      = 4;
             switch($row['approve_status']) {
-
                 case  eZXApproveStatus::StatusSelectApprover:
-                    printf("%s\n","StatusSelectApprover: nothing more to be done");
+                    printf("%s\n","StatusSelectApprover: checking if there's something to be done");
+                    eZXApproveStatus::removeRecords($row);
                     break;
                 case eZXApproveStatus::StatusInApproval:
-                    printf("%s\n","StatusInApproval: nothing more to be done");
+                    printf("%s\n","StatusInApproval: checking if there's something to be done");
+                    eZXApproveStatus::removeRecords($row);
                     break;
                 default:
-                    printf("%s\n","We are going to cleanup your tables");
+                     eZXApproveStatus::removeRecords($row);
+                break;//end default
+            }
 
+        }
+       $db->commit();
+    }
+    //added by MM
+    static function cleanup() {
+        $db = eZDB::instance();
+        $db->begin();
+        $db->query( "DELETE FROM ezx_approve_status");
+        $db->query( "DELETE FROM ezx_approve_status_user_link" );
+        $db->commit();
+    }
+    static function cleanupGroups() {
+        $db = eZDB::instance();
+        $db->begin();
+        $db->query( "DELETE FROM ezcollab_group");
+        $db->commit();
+    }
+
+    static function removeRecords($row){
+                    global $db;
+                    printf("%s\n","We are going to cleanup your tables");
                     $workflow_id=$row['workflowprocess_id'];
                     $workflow_rows=$db->arrayQuery("SELECT id FROM ezworkflow_process
                                                     WHERE id=$workflow_id");
@@ -620,28 +644,7 @@ class eZXApproveStatus extends eZPersistentObject {
                     }
 
 
-                    break;
-            }
-
-        }
-       $db->commit();
     }
-    //added by MM
-    static function cleanup() {
-        $db = eZDB::instance();
-        $db->begin();
-        $db->query( "DELETE FROM ezx_approve_status");
-        $db->query( "DELETE FROM ezx_approve_status_user_link" );
-        $db->commit();
-    }
-    static function cleanupGroups() {
-        $db = eZDB::instance();
-        $db->begin();
-        $db->query( "DELETE FROM ezcollab_group");
-        $db->commit();
-    }
-
-
 
 }
 

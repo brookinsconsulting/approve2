@@ -196,6 +196,7 @@ class eZApprove2Type extends eZWorkflowEventType {
                         $contentObjectID = $parameters['object_id'];
                         $approveStatus = eZXApproveStatus::fetchByContentObjectID( $contentObjectID,
                             $contentObjectVersionID );
+
                         if ( !$approveStatus ||
                             $approveStatus->attribute( 'approve_status' ) == eZXApproveStatus::StatusSelectApprover ) {
 
@@ -204,6 +205,7 @@ class eZApprove2Type extends eZWorkflowEventType {
                                 $webdavEditors=$approveINI->variable( 'ApproveSettings', 'webdavEditors' );
                                 $webdavGroups=array();
                                 $approveStatus=$this->addApprovers($process,$parameters,$webdavGroups,$webdavEditors,$user);
+                                return eZWorkflowType::STATUS_DEFERRED_TO_CRON_REPEAT;
                             }else{
                             if ( !$approveStatus ) {
                                 $approveStatus = eZXApproveStatus::create( $contentObjectID,
@@ -213,8 +215,10 @@ class eZApprove2Type extends eZWorkflowEventType {
                                 $approveStatus->store();
                                 $approveStatus->setCreator( $user->attribute( 'contentobject_id' ) );
                             }
+
                             $approveStatus->setAttribute( 'active_version', $contentObjectVersionID );
                             $approveStatus->sync();
+
                             $process->Template = array();
                             $process->Template['templateName'] = 'design:workflow/eventtype/ezapprove2/select_approver.tpl';
                             $process->Template['templateVars'] = array( 'event' => $event,
@@ -269,8 +273,10 @@ class eZApprove2Type extends eZWorkflowEventType {
                                             $collaborationItem->setAttribute( 'modified', $timestamp );
                                             $collaborationItem->setIsActive( false );
                                             $collaborationItem->sync();
+
                                             $approveStatus->setAttribute( 'approve_status', eZXApproveStatus::StatusApproved );
                                             $approveStatus->store();
+
                                             $approveINI = eZINI::instance( 'ezapprove2.ini' );
                                             if ( $approveINI->variable( 'ApproveSettings', 'ObjectLockOnEdit' ) == 'true' ) {
                                             // Unlock related objects
