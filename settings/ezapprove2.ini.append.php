@@ -12,6 +12,13 @@ UserClassIdentifierList[]=alunno
 webdavEditors[]
 webdavEditors[]=14
 
+DefaultBrowseStart[]
+DefaultBrowseStart[professore]=Users/Docenti
+DefaultBrowseStart[genitore]=Users/Docenti
+DefaultBrowseStart[ata]=Users/Ata
+DefaultBrowseStart[alunno]=Users/Docenti
+DefaultBrowseStart[user]=Users
+
 
 # Append custom user group classes here.
 UserGroupClassIdentifierList[]

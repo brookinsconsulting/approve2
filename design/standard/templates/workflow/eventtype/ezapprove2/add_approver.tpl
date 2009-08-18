@@ -31,14 +31,16 @@
         <th class="tight">&nbsp;</th>
         <th>{'Approve users'|i18n( 'design/admin/workflow/eventtype/edit' )}</th>
     </tr>
-    {foreach $approve_user_list as $approveUserLink
+    {if isset($approve_user_list}
+        {foreach $approve_user_list as $approveUserLink
              sequence array( bglight, bgdark ) as $sequence}
-        <tr class="{$sequence}">
-            <td><input type="checkbox" name="DeleteApproveUserIDArray[]" value="{$approveUserLink.id}" />
-            <input type="hidden" name="ApproveUserID[]" value="{$approveUserLink.id}" /></td>
-            <td>{$approveUserLink.user.contentobject.name|wash}</td>
-        </tr>
-    {/foreach}
+            <tr class="{$sequence}">
+                <td><input type="checkbox" name="DeleteApproveUserIDArray[]" value="{$approveUserLink.id}" />
+                <input type="hidden" name="ApproveUserID[]" value="{$approveUserLink.id}" /></td>
+                <td>{$approveUserLink.user.contentobject.name|wash}</td>
+            </tr>
+        {/foreach}
+    {/if}
     </table>
 {else}
     <p>{'No users selected.'|i18n( 'design/admin/workflow/eventtype/edit' )}</p>

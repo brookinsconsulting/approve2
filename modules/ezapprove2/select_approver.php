@@ -60,7 +60,8 @@ else if ( $http->hasPostVariable( 'AddApproveUsers' ) )
     #include_once( 'kernel/classes/ezcontentbrowse.php' );
     eZContentBrowse::browse( array( 'action_name' => 'SelectMultipleUsers',
                                     'class_array' => $approveINI->variable( 'ApproveSettings', 'UserClassIdentifierList' ),
-                                    'from_page' => 'ezapprove2/select_approver/' . $approveStatus->attribute( 'id' ) ),
+                                    'from_page' => 'ezapprove2/select_approver/' . $approveStatus->attribute( 'id' ),
+                                     'start_node'=>$http->postVariable( 'startNodeId')),
                              $Module );
 }
 else if ( $http->hasPostVariable( 'SelectedObjectIDArray' ) )

@@ -208,6 +208,10 @@ class eZApprove2Type extends eZWorkflowEventType {
                                 return eZWorkflowType::STATUS_DEFERRED_TO_CRON_REPEAT;
                             }else{
                             if ( !$approveStatus ) {
+                                $approveINI = eZINI::instance( 'ezapprove2.ini' );
+                                $DefaultBrowseStart=$approveINI->variable( 'ApproveSettings', 'DefaultBrowseStart' );
+                                $userObject = eZContentObject::fetch($user->attribute( 'contentobject_id' ));
+                                $browseStartNode=self::getParentNodeID($DefaultBrowseStart[$userObject->ClassName],5);
                                 $approveStatus = eZXApproveStatus::create( $contentObjectID,
                                 $contentObjectVersionID,
                                 $process->attribute( 'id' ),
@@ -223,8 +227,11 @@ class eZApprove2Type extends eZWorkflowEventType {
                             $process->Template['templateName'] = 'design:workflow/eventtype/ezapprove2/select_approver.tpl';
                             $process->Template['templateVars'] = array( 'event' => $event,
                                 'approval_status' => $approveStatus,
-                                'object' => $object );
+                                'object' => $object,
+                                'start_node'=>$browseStartNode);
 
+                            $process->Template['path'] = array( array( 'url' => false,
+                                'text' => ezi18n( 'ezapprove2', 'Select Approver' ) ) );
                             // Set object version to draft untill approvers are selected successfully in case user exists in the wrong way.
                             #include_once( 'kernel/classes/ezcontentobjectversion.php' );
                             $contentObjectVersion = eZContentObjectVersion::fetchVersion( $contentObjectVersionID, $contentObjectID );
@@ -614,6 +621,13 @@ class eZApprove2Type extends eZWorkflowEventType {
                     } break;
             }
         }
+    }
+
+    private function getParentNodeID($url,$defaultPlacement) {
+        $Container=eZContentObjectTreeNode::fetchByURLPath($url);
+        if (is_object($Container)) {
+            return $Container->NodeID;
+        }else {return $defaultPlacement;}
     }
 
 

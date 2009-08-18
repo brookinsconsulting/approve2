@@ -4,7 +4,7 @@
 
 <div id="maincontent-design">
 
-{def $base_uri=concat( 'ezapprove2/select_approver/', $approval_status.id, '/', $approval_status.step )}
+{def $base_uri=concat( 'ezapprove2/select_approver/', $approval_status.id, '/0')}
 
 <form name="SelectApprover" method="post" action={$base_uri|ezurl}>
 
@@ -20,11 +20,6 @@
 
 <div class="context-attributes">
 
-{if $warning}
-    <div class="message-warning">
-        <h2>{$warning|wash}</h2>
-    </div>
-{/if}
 
 {if $approval_status.approve2_event.require_all_approve|eq(2)}
     <div class="block">
@@ -49,6 +44,7 @@
         <th class="tight">&nbsp;</th>
         <th>{'Approve users'|i18n( 'design/admin/workflow/eventtype/edit' )}</th>
     </tr>
+
     {foreach $approval_status.approve_user_list as $approveUserLink
              sequence array( bglight, bgdark ) as $sequence}
         <tr class="{$sequence}">
@@ -64,7 +60,7 @@
 
 <input class="button" type="submit" name="RemoveApproveUsers" value="{'Remove selected'|i18n( 'design/admin/workflow/eventtype/edit' )}" />
 <input class="button" type="submit" name="AddApproveUsers" value="{'Add users'|i18n( 'design/admin/workflow/eventtype/edit' )}" />
-
+<input type="hidden"  name="startNodeId" value="{$start_node}" />
 </div>
 
 </div>
