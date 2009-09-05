@@ -118,6 +118,14 @@
         <source>%1 awaits your approval</source>
         <translation>%1 aspetta la tua approvazione</translation>
     </message>
+    <message>
+        <source>%1 was modified by approver</source>
+        <translation>%1 è stato modificato dal revisore</translation>
+    </message>
+    <message>
+        <source>You approved the content and it is waiting for more approvers or the workflow to continue</source>
+        <translation>Hai approvato il contenuto che è in attesa dell&apos;approvazione da parte di altri revisori o dell&apos;avanzamento del flusso di lavoro</translation>
+    </message>
 </context>
 <context>
     <name>design/admin/node/view/full</name>
@@ -457,6 +465,22 @@ change your settings at:</source>
     <message>
         <source>Approve List</source>
         <translation>Lista di approvazione</translation>
+    </message>
+    <message>
+        <source>Edited by Approver</source>
+        <translation>Modificato dal revisore</translation>
+    </message>
+    <message>
+        <source>You must select at least an approver, either among the previously selected ones or all available users</source>
+        <translation>Devi selezionare almeno un revisore o tra quelli precedentemente selezionati o tra tutti gli utenti</translation>
+    </message>
+    <message>
+        <source>Select your approver among previously selected approvers</source>
+        <translation>Seleziona il tuo revisore tra quelli precedentementi utilizzati</translation>
+    </message>
+    <message>
+        <source>Select Approver</source>
+        <translation>Seleziona il revisore</translation>
     </message>
 </context>
 <context>
