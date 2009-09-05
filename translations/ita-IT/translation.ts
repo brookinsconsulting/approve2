@@ -176,6 +176,10 @@
         <source>Any</source>
         <translation>Qualsiasi</translation>
     </message>
+    <message>
+        <source>Forget selected</source>
+        <translation>Dimentica selezionati</translation>
+    </message>
 </context>
 <context>
     <name>design/standard/collaboration</name>
@@ -250,6 +254,13 @@ change your settings at:</source>
     <message>
         <source>Users without approval</source>
         <translation>Utenti senza approvazione</translation>
+    </message>
+</context>
+<context>
+    <name>ezapprove</name>
+    <message>
+        <source>Use as Approver</source>
+        <translation>Utilizza come revisore</translation>
     </message>
 </context>
 <context>
@@ -481,6 +492,18 @@ change your settings at:</source>
     <message>
         <source>Select Approver</source>
         <translation>Seleziona il revisore</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Rimuovi</translation>
+    </message>
+    <message>
+        <source>Approver</source>
+        <translation>Revisore</translation>
+    </message>
+    <message>
+        <source>Select</source>
+        <translation>Seleziona</translation>
     </message>
 </context>
 <context>

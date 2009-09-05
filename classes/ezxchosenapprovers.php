@@ -61,6 +61,14 @@ class eZXChosenApprovers extends eZPersistentObject {
         return eZUser::fetch( $this->attribute( 'approver_user_id' ) );
     }
 
+    static function removeUserApprover( $userId, $approverId ) {
+        $condArray = array( 'user_id' => $userId,'approver_user_id'=>$approverId );
+
+        eZPersistentObject::removeObject(eZXChosenApprovers::definition(),
+            $condArray );
+    }
+
+
 
      /* static Fetch functions */
     static function fetchApproversList( $UserID, $asObject = true ) {

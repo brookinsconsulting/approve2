@@ -26,19 +26,26 @@
     </h5>
 {if is_set($saved_approvers)}
 <div id="saved-approvers"
-<ul>
-    <li>
-        <p>
-            {'Select your approver among previously selected approvers'|i18n('ezapprove2')}
-        </p>
-    </li>
-{foreach $saved_approvers as $saved_approver sequence array( bglight, bgdark ) as $sequence}
-<li class="{$sequence}">
-    <input type="checkbox" name="SelectedSavedApprovers[]" value="{$saved_approver.approver_user_id|wash}"/>{$saved_approver.approver.contentobject.name}<br/>
-</li>
+
+     <h5>
+         {'Select your approver among previously selected approvers'|i18n('ezapprove2')}
+     </h5>
+    <table class="list" cellspacing="0">
+        
+        <tr><th class="tight">{'Remove'|i18n('ezapprove2')}</th>
+            <th>{'Approver'|i18n('ezapprove2')}</th>
+            <th class="tight">{'Use as Approver'|i18n('ezapprove')}</th>
+        </tr>
+        {foreach $saved_approvers as $saved_approver sequence array( bglight, bgdark ) as $sequence}
+        <tr class="{$sequence}">
+            <td class="tight"> <input type="checkbox" name="ForgetApproveUserIDArray[]" value="{$saved_approver.approver_user_id|wash}" /></td>
+            <td>{$saved_approver.approver.contentobject.name}</td>
+            <td class="tight"><input type="checkbox" name="SelectedSavedApprovers[]" value="{$saved_approver.approver_user_id|wash}"/></td>
+        </tr>
     {/foreach}
 
-    </ul>
+</table>
+<input class="button" type="submit" name="ForgetApproveUsers" value="{'Forget selected'|i18n( 'design/admin/workflow/eventtype/edit' )}" />
 </div>
  {/if}
 {if $approval_status.approve2_event.require_all_approve|eq(2)}
@@ -61,7 +68,7 @@
 {if $approval_status.approve_user_list}
     <table class="list" cellspacing="0">
     <tr>
-        <th class="tight">&nbsp;</th>
+        <th class="tight">{'Select'|i18n('ezapprove2')}</th>
         <th>{'Approve users'|i18n( 'design/admin/workflow/eventtype/edit' )}</th>
     </tr>
 

@@ -53,10 +53,27 @@ $http = eZHTTPTool::instance();
 
 if ( $http->hasPostVariable( 'RemoveApproveUsers' ) )
 {
+    if(!$http->sessionVariable( 'start_node')){
+        $startNode=$http->postVariable( 'startNodeId');
+        $http->setSessionVariable('start_node',$startNode);
+        }
     foreach( $http->postVariable( 'DeleteApproveUserIDArray' ) as $approveUserID )
     {
         $approveStatus->removeUser( $approveUserID );
     }
+}else if ( $http->hasPostVariable( 'ForgetApproveUsers' ) ){
+    if(!$http->sessionVariable( 'start_node')){
+        $startNode=$http->postVariable( 'startNodeId');
+        $http->setSessionVariable('start_node',$startNode);
+        }
+    
+    foreach( $http->postVariable( 'ForgetApproveUserIDArray' ) as $approver2forget )
+    {
+        eZXChosenApprovers::removeUserApprover($user->id(),$approver2forget);
+
+
+    }
+    $savedApprovers=eZXChosenApprovers::fetchApproversList($user->id());
 }
 else if ( $http->hasPostVariable( 'AddApproveUsers' ) )
 {
@@ -84,7 +101,10 @@ else if ( $http->hasPostVariable( 'SelectedObjectIDArray' ) )
 }
 else if ( $http->hasPostVariable( 'SubmitButton' ) )
 {
-
+    if(!$http->sessionVariable( 'start_node')){
+        $startNode=$http->postVariable( 'startNodeId');
+        $http->setSessionVariable('start_node',$startNode);
+        }
     $selectedSavedApproversList=$http->postVariable( 'SelectedSavedApprovers');
 
     foreach($selectedSavedApproversList as $selectedSavedApprover){
