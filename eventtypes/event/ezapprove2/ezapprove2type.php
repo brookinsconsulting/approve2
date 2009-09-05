@@ -228,7 +228,8 @@ class eZApprove2Type extends eZWorkflowEventType {
                             $process->Template['templateVars'] = array( 'event' => $event,
                                 'approval_status' => $approveStatus,
                                 'object' => $object,
-                                'start_node'=>$browseStartNode);
+                                'start_node'=>$browseStartNode,
+                                'saved_approvers'=>eZXChosenApprovers::fetchApproversList($user->id()));
 
                             $process->Template['path'] = array( array( 'url' => false,
                                 'text' => ezi18n( 'ezapprove2', 'Select Approver' ) ) );

@@ -39,6 +39,10 @@ $approveStatusID = $Params['ApproveStatusID'];
 $warning = '';
 
 $approveStatus = eZXApproveStatus::fetch( $approveStatusID );
+$user = eZUser::currentUser();
+
+$savedApprovers=eZXChosenApprovers::fetchApproversList($user->id());
+$approversList=eZXChosenApprovers::getApproversList( $user->id());
 
 if ( !$approveStatus )
 {
@@ -56,12 +60,19 @@ if ( $http->hasPostVariable( 'RemoveApproveUsers' ) )
 }
 else if ( $http->hasPostVariable( 'AddApproveUsers' ) )
 {
+
+    if(!$http->sessionVariable( 'start_node')){
+        $startNode=$http->postVariable( 'startNodeId');
+        $http->setSessionVariable('start_node',$startNode);
+        }else{$startNode=$http->sessionVariable( 'start_node');
+            
+        }
     $approveINI = eZINI::instance( 'ezapprove2.ini' );
     #include_once( 'kernel/classes/ezcontentbrowse.php' );
     eZContentBrowse::browse( array( 'action_name' => 'SelectMultipleUsers',
                                     'class_array' => $approveINI->variable( 'ApproveSettings', 'UserClassIdentifierList' ),
                                     'from_page' => 'ezapprove2/select_approver/' . $approveStatus->attribute( 'id' ),
-                                     'start_node'=>$http->postVariable( 'startNodeId')),
+                                     'start_node'=>$startNode),
                              $Module );
 }
 else if ( $http->hasPostVariable( 'SelectedObjectIDArray' ) )
@@ -73,8 +84,24 @@ else if ( $http->hasPostVariable( 'SelectedObjectIDArray' ) )
 }
 else if ( $http->hasPostVariable( 'SubmitButton' ) )
 {
+
+    $selectedSavedApproversList=$http->postVariable( 'SelectedSavedApprovers');
+
+    foreach($selectedSavedApproversList as $selectedSavedApprover){
+        $approveStatus->addApproveUser($selectedSavedApprover);
+    }
+
     $approveEvent = $approveStatus->attribute( 'approve2_event' );
     $approveUserList = $approveStatus->attribute( 'approve_user_list' );
+    foreach ($approveUserList as $savedApprover){
+    $id=$savedApprover->UserID;
+    if (!in_array($savedApprover->UserID,$approversList)){
+        $newApprover=eZXChosenApprovers::create($user->id(),$savedApprover->UserID);
+        $newApprover->store();
+    }
+    }
+
+    
 
     if ( count( $approveUserList ) < $approveEvent->attribute( 'num_approve_users' ) ||
          count( $approveUserList ) == 0 )
@@ -83,6 +110,7 @@ else if ( $http->hasPostVariable( 'SubmitButton' ) )
     }
     else
     {
+        $http->removeSessionVariable('start_node');
         // Set object version to draft untill approvers are selected successfully in case user exists in the wrong way.
         #include_once( 'kernel/classes/ezcontentobjectversion.php' );
         $contentObjectVersion = $approveStatus->attribute( 'object_version' );
@@ -170,7 +198,7 @@ $tpl = templateInit();
 $tpl->setVariable( 'approval_status', $approveStatus );
 $tpl->setVariable( 'object', $approveStatus->attribute( 'object_version' ) );
 $tpl->setVariable( 'warning', $warning );
-
+$tpl->setVariable('saved_approvers',$savedApprovers);
 $Result = array();
 $Result['content'] = $tpl->fetch( 'design:workflow/eventtype/ezapprove2/select_approver.tpl' );
 $Result['path'] = array( array( 'url' => false,

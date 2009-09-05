@@ -2,13 +2,15 @@
 
 <div id="maincontent"><div id="fix">
 
+
+
 <div id="maincontent-design">
 
 {def $base_uri=concat( 'ezapprove2/select_approver/', $approval_status.id, '/0')}
 
 <form name="SelectApprover" method="post" action={$base_uri|ezurl}>
 
-<div class="context-block">
+<!--<div class="context-block">-->
 {* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 <h2 class="context-title">{'Select users for content approval <%object_name>'|i18n( 'ezapprove2',, hash( '%object_name', $object.name ) )|wash}</h2>
 
@@ -19,8 +21,26 @@
 {* DESIGN: Content START *}<div class="box-ml"><div class="box-mr"><div class="box-content">
 
 <div class="context-attributes">
+    <h5>
+{'You must select at least an approver, either among the previously selected ones or all available users'|i18n('ezapprove2')}
+    </h5>
+{if is_set($saved_approvers)}
+<div id="saved-approvers"
+<ul>
+    <li>
+        <p>
+            {'Select your approver among previously selected approvers'|i18n('ezapprove2')}
+        </p>
+    </li>
+{foreach $saved_approvers as $saved_approver sequence array( bglight, bgdark ) as $sequence}
+<li class="{$sequence}">
+    <input type="checkbox" name="SelectedSavedApprovers[]" value="{$saved_approver.approver_user_id|wash}"/>{$saved_approver.approver.contentobject.name}<br/>
+</li>
+    {/foreach}
 
-
+    </ul>
+</div>
+ {/if}
 {if $approval_status.approve2_event.require_all_approve|eq(2)}
     <div class="block">
         <div class="element">

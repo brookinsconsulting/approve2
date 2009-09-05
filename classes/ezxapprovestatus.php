@@ -45,11 +45,11 @@
 #define( 'eZXApproveStatus_StatusEditedByApprover', 5 );
 
 class eZXApproveStatus extends eZPersistentObject {
-    const StatusSelectApprover = 0;
-    const StatusInApproval     = 1;
-    const StatusApproved       = 2;
-    const StatusDiscarded      = 3;
-    const StatusFinnished      = 4;
+    const StatusSelectApprover   = 0;
+    const StatusInApproval       = 1;
+    const StatusApproved         = 2;
+    const StatusDiscarded        = 3;
+    const StatusFinnished        = 4;
     const StatusEditedByApprover = 5;
 
     /*!
