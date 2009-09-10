@@ -198,11 +198,14 @@
                             </div></div></div></div></div></div>
         <div class="box-bc"><div class="box-ml"><div class="box-mr"><div class="box-bl"><div class="box-br"><div class="box-content">
                                 <div class="block">
+
+                                
                                     {foreach $participant_list as $Role}
+                                   
                                     <label >{$Role.name|wash}:</label>
-                                    {foreach $Role.items as $Partecipant}
-                                    <p>{collaboration_participation_view view=text_linked collaboration_participant=$Partecipant}</p>
-                                    {/foreach}
+                                    {foreach $Role.items as $Participant}
+                                    <p>{content_view_gui view=text_linked content_object=$Participant.participant.contentobject}</p>
+                                       {/foreach}
                                     {/foreach}
                                 </div>
                             </div></div></div></div></div></div>
